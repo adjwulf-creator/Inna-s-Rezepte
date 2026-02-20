@@ -1,80 +1,29 @@
 // app.js
 
-// --- Database Service (IndexedDB) ---
-const DB_NAME = 'MonLivreDeRecettes';
-const DB_VERSION = 1;
-const STORE_NAME = 'recipes';
+// --- Supabase Configuration ---
+const SUPABASE_URL = 'https://tdexsgzinjbabiczihwj.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_xtguokRm66tP1SEwGC-RaQ_ifuZSJ9U';
 
-class RecipeDB {
-    constructor() {
-        this.db = null;
-    }
+// Initialize Supabase Client
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async init() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-            request.onerror = (event) => {
-                console.error("Database error: ", event.target.error);
-                reject(event.target.error);
-            };
-
-            request.onsuccess = (event) => {
-                this.db = event.target.result;
-                resolve(this.db);
-            };
-
-            request.onupgradeneeded = (event) => {
-                const db = event.target.result;
-                if (!db.objectStoreNames.contains(STORE_NAME)) {
-                    const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-                    store.createIndex('category', 'category', { unique: false });
-                    store.createIndex('title', 'title', { unique: false });
-                    store.createIndex('createdAt', 'createdAt', { unique: false });
-                }
-            };
-        });
-    }
-
-    async getAllRecipes() {
-        return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([STORE_NAME], 'readonly');
-            const store = transaction.objectStore(STORE_NAME);
-            const request = store.getAll();
-
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-        });
-    }
-
-    async addRecipe(recipe) {
-        return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([STORE_NAME], 'readwrite');
-            const store = transaction.objectStore(STORE_NAME);
-            const request = store.add(recipe);
-
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-        });
-    }
-
-    async deleteRecipe(id) {
-        return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([STORE_NAME], 'readwrite');
-            const store = transaction.objectStore(STORE_NAME);
-            const request = store.delete(id);
-
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error);
-        });
-    }
-}
-
-// --- Application Logic ---
-const db = new RecipeDB();
 let recipes = [];
 
 // DOM Elements
+const loginOverlay = document.getElementById('loginOverlay');
+const loginForm = document.getElementById('loginForm');
+const loginEmail = document.getElementById('loginEmail');
+const loginPassword = document.getElementById('loginPassword');
+const loginError = document.getElementById('loginError');
+const authSubmitBtn = document.getElementById('authSubmitBtn');
+const authToggleLink = document.getElementById('authToggleLink');
+const authToggleText = document.getElementById('authToggleText');
+const loginSubtitle = document.querySelector('.login-subtitle');
+const logoutBtn = document.getElementById('logoutBtn');
+
+let isLoginMode = true; // Toggle between login and register
+let currentUser = null;
+
 const recipeGrid = document.getElementById('recipeGrid');
 const emptyState = document.getElementById('emptyState');
 const addRecipeBtn = document.getElementById('addRecipeBtn');
@@ -98,17 +47,54 @@ let currentViewRecipeId = null;
 
 // Initialize app
 async function initApp() {
-    try {
-        await db.init();
-        await loadRecipes();
-        setupEventListeners();
-    } catch (error) {
-        console.error("Failed to initialize app:", error);
-    }
+    setupEventListeners();
+    await checkUser();
 }
 
+async function checkUser() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+        // Logged in
+        currentUser = session.user;
+        loginOverlay.classList.add('hidden');
+        await loadRecipes();
+    } else {
+        // Not logged in
+        currentUser = null;
+        loginOverlay.classList.remove('hidden');
+    }
+
+    // Listen for auth changes
+    supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN') {
+            currentUser = session.user;
+            loginOverlay.classList.add('hidden');
+            loadRecipes();
+        } else if (event === 'SIGNED_OUT') {
+            currentUser = null;
+            loginOverlay.classList.remove('hidden');
+            recipes = [];
+            renderRecipes();
+        }
+    });
+}
+
+// Holen der Rezepte aus Supabase
 async function loadRecipes() {
-    recipes = await db.getAllRecipes();
+    if (!currentUser) return;
+
+    const { data, error } = await supabase
+        .from('recipes')
+        .select('*')
+        .eq('user_id', currentUser.id) // Only load recipes for current user
+        .order('createdAt', { ascending: false });
+
+    if (error) {
+        console.error("Error loading recipes:", error);
+        return;
+    }
+
+    recipes = data;
     renderRecipes();
 }
 
@@ -171,6 +157,74 @@ function renderRecipes() {
 
 // Setup all event listeners
 function setupEventListeners() {
+    // Auth - Toggle Mode
+    authToggleLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        isLoginMode = !isLoginMode;
+        loginError.classList.add('hidden');
+
+        if (isLoginMode) {
+            loginSubtitle.textContent = 'Bitte melde dich an, um fortzufahren.';
+            authSubmitBtn.textContent = 'Anmelden';
+            authToggleText.textContent = 'Noch kein Konto?';
+            authToggleLink.textContent = 'Jetzt registrieren';
+        } else {
+            loginSubtitle.textContent = 'Erstelle ein neues Konto für dein Kochbuch.';
+            authSubmitBtn.textContent = 'Registrieren';
+            authToggleText.textContent = 'Bereits ein Konto?';
+            authToggleLink.textContent = 'Hier anmelden';
+        }
+    });
+
+    // Auth - Login/Register
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginError.classList.add('hidden');
+
+        const email = loginEmail.value;
+        const password = loginPassword.value;
+
+        const origText = authSubmitBtn.textContent;
+        authSubmitBtn.disabled = true;
+        authSubmitBtn.textContent = 'Lädt...';
+
+        let authError = null;
+
+        if (isLoginMode) {
+            const { error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+            authError = error;
+        } else {
+            const { error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+            });
+            authError = error;
+            if (!error) {
+                alert('Registrierung erfolgreich! Je nach deinen Supabase-Einstellungen musst du evtl. noch deine E-Mail bestätigen. Falls Auto-Confirm an ist, bist du jetzt eingeloggt!');
+            }
+        }
+
+        authSubmitBtn.disabled = false;
+        authSubmitBtn.textContent = origText;
+
+        if (authError) {
+            loginError.textContent = isLoginMode ? "Fehler: E-Mail oder Passwort falsch." : "Fehler bei der Registrierung: " + authError.message;
+            loginError.classList.remove('hidden');
+        } else {
+            loginForm.reset();
+        }
+    });
+
+    // Auth - Logout
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            await supabase.auth.signOut();
+        });
+    }
+
     // Search & Filter
     searchInput.addEventListener('input', renderRecipes);
     categoryFilter.addEventListener('change', renderRecipes);
@@ -208,7 +262,7 @@ function setupEventListeners() {
         }
     });
 
-    // Form Submit
+    // Form Submit (Save Recipe)
     recipeForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -217,43 +271,98 @@ function setupEventListeners() {
         const ingredients = document.getElementById('recipeIngredients').value;
         const instructions = document.getElementById('recipeInstructions').value;
 
-        // Handle Image
-        let imageData = null;
-        const imgElement = imagePreview.querySelector('img');
-        if (imgElement) {
-            imageData = imgElement.src; // Base64 Data URL
-        }
+        // Visual Feedback (disable button)
+        const submitBtn = recipeForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Speichern...';
 
-        const newRecipe = {
-            title,
-            category,
-            ingredients,
-            instructions,
-            imageData,
-            createdAt: Date.now()
-        };
+        let imageData = null;
+        const file = recipeImageInput.files[0];
 
         try {
-            await db.addRecipe(newRecipe);
+            // Upload Image to Supabase Storage if file selected
+            if (file) {
+                // Ensure unique filename
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('recipe-images')
+                    .upload(fileName, file);
+
+                if (uploadError) throw uploadError;
+
+                // Get public URL
+                const { data } = supabase.storage
+                    .from('recipe-images')
+                    .getPublicUrl(fileName);
+
+                imageData = data.publicUrl;
+            }
+
+            const newRecipe = {
+                title,
+                category,
+                ingredients,
+                instructions,
+                imageData,
+                user_id: currentUser.id,
+                createdAt: Date.now()
+            };
+
+            const { error: insertError } = await supabase
+                .from('recipes')
+                .insert([newRecipe]);
+
+            if (insertError) throw insertError;
+
             await loadRecipes();
             closeAddModal();
         } catch (error) {
-            alert('Fehler beim Speichern des Rezepts.');
+            alert('Fehler beim Speichern des Rezepts. Überprüfe die Supabase-Rechte.');
             console.error(error);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Speichern';
         }
     });
 
     // Delete Recipe
     deleteRecipeBtn.addEventListener('click', async () => {
         if (currentViewRecipeId && confirm('Möchtest du dieses Rezept wirklich löschen?')) {
+            const deleteBtn = document.getElementById('deleteRecipeBtn');
+            deleteBtn.disabled = true;
+            deleteBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Löschen...';
+
             try {
-                await db.deleteRecipe(currentViewRecipeId);
+                // Recipe info to delete associated image
+                const recipe = recipes.find(r => r.id === currentViewRecipeId);
+
+                // Delete from database
+                const { error: deleteError } = await supabase
+                    .from('recipes')
+                    .delete()
+                    .eq('id', currentViewRecipeId);
+
+                if (deleteError) throw deleteError;
+
+                // Optional: Delete image from Storage
+                if (recipe && recipe.imageData) {
+                    const urlParts = recipe.imageData.split('/');
+                    const fileName = urlParts[urlParts.length - 1];
+                    // Best effort delete without pausing the app
+                    supabase.storage.from('recipe-images').remove([fileName]).catch(e => console.log("Image cleanup error", e));
+                }
+
                 await loadRecipes();
                 viewModal.classList.add('hidden');
                 currentViewRecipeId = null;
             } catch (error) {
-                alert('Fehler beim Löschen.');
+                alert('Fehler beim Löschen des Rezepts.');
                 console.error(error);
+            } finally {
+                deleteBtn.disabled = false;
+                deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Löschen';
             }
         }
     });

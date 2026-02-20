@@ -320,6 +320,7 @@ select:focus {
     font-size: 0.95rem;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin-bottom: 1rem;
@@ -585,6 +586,84 @@ select:focus {
     z-index: 10;
     background: var(--color-surface);
     box-shadow: 0 2px 10px var(--color-shadow);
+}
+
+/* Login Overlay */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg);
+    background-image: radial-gradient(#e6dfd1 1px, transparent 1px);
+    background-size: 20px 20px;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.login-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.login-box {
+    background-color: var(--color-surface);
+    padding: 3rem;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--color-border);
+    width: 90%;
+    max-width: 400px;
+}
+
+.login-box .logo {
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+    text-align: center;
+    color: var(--color-text-light);
+    margin-bottom: 2rem;
+}
+
+.login-error {
+    color: var(--color-accent);
+    background-color: rgba(208, 122, 97, 0.1);
+    padding: 0.8rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    border: 1px solid rgba(208, 122, 97, 0.3);
+}
+
+.login-error.hidden {
+    display: none;
+}
+
+.auth-toggle {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+}
+
+.auth-toggle a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 0.5rem;
+    transition: var(--transition);
+}
+
+.auth-toggle a:hover {
+    color: var(--color-secondary);
+    text-decoration: underline;
 }
 
 /* Responsive */

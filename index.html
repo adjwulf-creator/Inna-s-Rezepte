@@ -30,6 +30,10 @@
                 <button id="addRecipeBtn" class="primary-btn">
                     <i class="fa-solid fa-plus"></i> Neues Rezept
                 </button>
+                <button id="logoutBtn" class="secondary-btn" style="padding: 0.6rem; border-radius: 50%;"
+                    title="Abmelden">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
             </div>
         </div>
     </header>
@@ -137,6 +141,36 @@
         </div>
     </div>
 
+    <!-- Login Overlay -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-box">
+            <div class="logo">
+                <i class="fa-solid fa-seedling"></i>
+                <h2>Inna´s Rezepte</h2>
+            </div>
+            <p class="login-subtitle">Bitte melde dich an, um fortzufahren.</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">E-Mail</label>
+                    <input type="email" id="loginEmail" required placeholder="deine@email.de">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Passwort</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                </div>
+                <div id="loginError" class="login-error hidden">Fehler beim Anmelden.</div>
+                <button type="submit" id="authSubmitBtn" class="primary-btn login-btn"
+                    style="width: 100%; justify-content: center;">Anmelden</button>
+                <div class="auth-toggle">
+                    <span id="authToggleText">Noch kein Konto?</span>
+                    <a href="#" id="authToggleLink">Jetzt registrieren</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
 </body>
 
