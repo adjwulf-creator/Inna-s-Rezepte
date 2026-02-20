@@ -61,9 +61,15 @@ const deleteRecipeBtn = document.getElementById('deleteRecipeBtn');
 let currentViewRecipeId = null;
 let editingRecipeId = null;
 
+// View State
+let isListView = localStorage.getItem('recipeBook_isListView') === 'true';
+const gridViewBtn = document.getElementById('gridViewBtn');
+const listViewBtn = document.getElementById('listViewBtn');
+
 // Initialize app
 async function initApp() {
     setupEventListeners();
+    applyViewState();
     await checkUser();
 }
 
@@ -348,6 +354,17 @@ function setupEventListeners() {
         });
     }
 
+    // View Toggles
+    gridViewBtn.addEventListener('click', () => {
+        isListView = false;
+        applyViewState();
+    });
+
+    listViewBtn.addEventListener('click', () => {
+        isListView = true;
+        applyViewState();
+    });
+
     // Search & Filter
     searchInput.addEventListener('input', renderRecipes);
     categoryFilter.addEventListener('change', renderRecipes);
@@ -624,6 +641,19 @@ function openViewModal(recipe) {
     `;
 
     viewModal.classList.remove('hidden');
+}
+
+function applyViewState() {
+    localStorage.setItem('recipeBook_isListView', isListView);
+    if (isListView) {
+        recipeGrid.classList.add('list-view');
+        listViewBtn.classList.add('active');
+        gridViewBtn.classList.remove('active');
+    } else {
+        recipeGrid.classList.remove('list-view');
+        gridViewBtn.classList.add('active');
+        listViewBtn.classList.remove('active');
+    }
 }
 
 // Boot up
