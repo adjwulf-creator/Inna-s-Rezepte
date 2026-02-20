@@ -370,8 +370,14 @@ button {
 }
 
 .control-group label {
-    font-weight: 500;
-    color: var(--color-text-light);
+    color: var(--color-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.control-group label:hover {
+    color: var(--color-accent);
 }
 
 select {
