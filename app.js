@@ -18,6 +18,7 @@ const loginError = document.getElementById('loginError');
 const authSubmitBtn = document.getElementById('authSubmitBtn');
 const authToggleLink = document.getElementById('authToggleLink');
 const authToggleText = document.getElementById('authToggleText');
+const authMainTitle = document.getElementById('authMainTitle');
 const loginSubtitle = document.querySelector('.login-subtitle');
 const logoutBtn = document.getElementById('logoutBtn');
 
@@ -167,12 +168,14 @@ function setupEventListeners() {
 
         if (isLoginMode) {
             loginBox.classList.remove('register-mode');
+            authMainTitle.textContent = 'Anmelden';
             loginSubtitle.textContent = 'Bitte melde dich an, um fortzufahren.';
             authSubmitBtn.textContent = 'Anmelden';
             authToggleText.textContent = 'Noch kein Konto?';
             authToggleLink.textContent = 'Jetzt registrieren';
         } else {
             loginBox.classList.add('register-mode');
+            authMainTitle.textContent = 'Registrieren';
             loginSubtitle.textContent = 'Erstelle ein neues Konto für dein Kochbuch.';
             authSubmitBtn.textContent = 'Konto erstellen';
             authToggleText.textContent = 'Bereits ein Konto?';

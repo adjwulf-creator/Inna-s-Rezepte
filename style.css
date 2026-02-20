@@ -631,6 +631,18 @@ select:focus {
     margin-bottom: 2rem;
 }
 
+.auth-main-title {
+    text-align: center;
+    font-size: 2.2rem;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+
+.login-box.register-mode .auth-main-title {
+    color: var(--color-secondary);
+}
+
 .login-error {
     color: var(--color-accent);
     background-color: rgba(208, 122, 97, 0.1);
