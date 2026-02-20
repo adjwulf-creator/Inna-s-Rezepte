@@ -55,9 +55,11 @@ const sortSelect = document.getElementById('sortSelect');
 const viewModal = document.getElementById('viewModal');
 const closeViewModalBtn = document.getElementById('closeViewModalBtn');
 const viewRecipeDetails = document.getElementById('viewRecipeDetails');
+const editRecipeBtn = document.getElementById('editRecipeBtn');
 const deleteRecipeBtn = document.getElementById('deleteRecipeBtn');
 
 let currentViewRecipeId = null;
+let editingRecipeId = null;
 
 // Initialize app
 async function initApp() {
@@ -223,7 +225,7 @@ function renderRecipes() {
         const matchesSearch = recipe.title.toLowerCase().includes(searchTerm) ||
             recipe.ingredients.toLowerCase().includes(searchTerm);
         const matchesCategory = category === 'all' || recipe.category === category;
-        const matchesFolder = currentFolderId === 'all' || recipe.folder_id === currentFolderId;
+        const matchesFolder = currentFolderId === 'all' || String(recipe.folder_id) === String(currentFolderId);
         return matchesSearch && matchesCategory && matchesFolder;
     });
 
@@ -388,9 +390,11 @@ function setupEventListeners() {
         }
     });
 
-    // Add Modal
+    // Add / Edit Modal
     addRecipeBtn.addEventListener('click', () => {
+        editingRecipeId = null;
         recipeForm.reset();
+        document.getElementById('modalTitle').textContent = 'Neues Rezept hinzufügen';
         recipeFolderSelect.value = currentFolderId === 'all' ? '' : currentFolderId;
         imagePreview.innerHTML = '<span>Bild auswählen</span>';
         recipeModal.classList.remove('hidden');
@@ -404,6 +408,32 @@ function setupEventListeners() {
     closeViewModalBtn.addEventListener('click', () => {
         viewModal.classList.add('hidden');
         currentViewRecipeId = null;
+    });
+
+    // Edit Recipe
+    editRecipeBtn.addEventListener('click', () => {
+        if (!currentViewRecipeId) return;
+        const recipe = recipes.find(r => r.id === currentViewRecipeId);
+        if (!recipe) return;
+
+        viewModal.classList.add('hidden');
+        editingRecipeId = recipe.id;
+        document.getElementById('modalTitle').textContent = 'Rezept bearbeiten';
+
+        // Populate Form
+        document.getElementById('recipeTitle').value = recipe.title;
+        document.getElementById('recipeCategory').value = recipe.category;
+        document.getElementById('recipeFolder').value = recipe.folder_id || '';
+        document.getElementById('recipeIngredients').value = recipe.ingredients;
+        document.getElementById('recipeInstructions').value = recipe.instructions;
+
+        if (recipe.imageData) {
+            imagePreview.innerHTML = `<img src="${recipe.imageData}" alt="${recipe.title}">`;
+        } else {
+            imagePreview.innerHTML = '<span>Bild auswählen</span>';
+        }
+
+        recipeModal.classList.remove('hidden');
     });
 
     // Image Upload Preview
@@ -437,10 +467,16 @@ function setupEventListeners() {
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Speichern...';
 
         let imageData = null;
+        // Keep old image if editing and no new file selected
+        if (editingRecipeId) {
+            const oldRecipe = recipes.find(r => r.id === editingRecipeId);
+            if (oldRecipe) imageData = oldRecipe.imageData;
+        }
+
         const file = recipeImageInput.files[0];
 
         try {
-            // Upload Image to Supabase Storage if file selected
+            // Upload Image to Supabase Storage if new file selected
             if (file) {
                 // Ensure unique filename
                 const fileExt = file.name.split('.').pop();
@@ -460,22 +496,35 @@ function setupEventListeners() {
                 imageData = data.publicUrl;
             }
 
-            const newRecipe = {
+            const recipeData = {
                 title,
                 category,
                 folder_id,
                 ingredients,
                 instructions,
                 imageData,
-                user_id: currentUser.id,
-                createdAt: Date.now()
+                user_id: currentUser.id
             };
 
-            const { error: insertError } = await sbClient
-                .from('recipes')
-                .insert([newRecipe]);
+            let saveError = null;
 
-            if (insertError) throw insertError;
+            if (editingRecipeId) {
+                // Update existing
+                const { error } = await sbClient
+                    .from('recipes')
+                    .update(recipeData)
+                    .eq('id', editingRecipeId);
+                saveError = error;
+            } else {
+                // Insert new
+                recipeData.createdAt = Date.now();
+                const { error } = await sbClient
+                    .from('recipes')
+                    .insert([recipeData]);
+                saveError = error;
+            }
+
+            if (saveError) throw saveError;
 
             await loadRecipes();
             closeAddModal();
