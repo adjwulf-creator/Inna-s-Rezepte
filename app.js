@@ -9,6 +9,7 @@ const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let recipes = [];
 let folders = [];
+let categories = [];
 let currentFolderId = 'all';
 
 // DOM Elements
@@ -61,6 +62,18 @@ const deleteRecipeBtn = document.getElementById('deleteRecipeBtn');
 let currentViewRecipeId = null;
 let editingRecipeId = null;
 
+// Settings DOM Elements
+const settingsBtn = document.getElementById('settingsBtn');
+const settingsModal = document.getElementById('settingsModal');
+const closeSettingsModalBtn = document.getElementById('closeSettingsModalBtn');
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+const passwordForm = document.getElementById('passwordForm');
+const passwordMessage = document.getElementById('passwordMessage');
+const categoryForm = document.getElementById('categoryForm');
+const newCategoryNameInput = document.getElementById('newCategoryName');
+const settingsCategoryList = document.getElementById('settingsCategoryList');
+
 // View State
 let isListView = localStorage.getItem('recipeBook_isListView') === 'true';
 const gridViewBtn = document.getElementById('gridViewBtn');
@@ -80,6 +93,7 @@ async function checkUser() {
         currentUser = session.user;
         loginOverlay.classList.add('hidden');
         await loadFolders();
+        await loadCategories();
         await loadRecipes();
     } else {
         // Not logged in
@@ -98,8 +112,10 @@ async function checkUser() {
             loginOverlay.classList.remove('hidden');
             recipes = [];
             folders = [];
+            categories = [];
             currentFolderId = 'all';
             renderFolders();
+            renderCategories();
             renderRecipes();
         }
     });
@@ -141,6 +157,144 @@ async function loadFolders() {
 
     folders = data;
     renderFolders();
+}
+
+// Holen der Kategorien aus Supabase
+async function loadCategories() {
+    if (!currentUser) return;
+
+    const { data, error } = await sbClient
+        .from('categories')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('createdAt', { ascending: true });
+
+    if (error) {
+        console.error("Error loading categories:", error);
+        return;
+    }
+
+    // Seed default categories if user has none
+    if (data.length === 0) {
+        const defaults = ['Vorspeise', 'Hauptgericht', 'Dessert', 'Backen', 'Getränk'];
+        const seedData = defaults.map(name => ({
+            name: name,
+            user_id: currentUser.id,
+            createdAt: Date.now()
+        }));
+
+        await sbClient.from('categories').insert(seedData);
+        // Reload after seeding
+        return await loadCategories();
+    }
+
+    categories = data;
+    renderCategories();
+}
+
+function renderCategories() {
+    // Populate Filter Dropdown
+    categoryFilter.innerHTML = '<option value="all">Alle Kategorien</option>';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.name;
+        option.textContent = cat.name;
+        categoryFilter.appendChild(option);
+    });
+
+    // Populate Recipe Form Dropdown
+    const recipeCategorySelect = document.getElementById('recipeCategory');
+    recipeCategorySelect.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.name;
+        option.textContent = cat.name;
+        recipeCategorySelect.appendChild(option);
+    });
+
+    renderSettingsCategoryList();
+}
+
+function renderSettingsCategoryList() {
+    settingsCategoryList.innerHTML = '';
+    categories.forEach(cat => {
+        const li = document.createElement('li');
+        li.className = 'settings-list-item';
+
+        li.innerHTML = `
+            <input type="text" class="category-input" value="${cat.name}" data-id="${cat.id}" data-original="${cat.name}">
+            <div class="folder-actions" style="display:flex">
+                <button class="save-cat-btn hidden" title="Speichern" data-id="${cat.id}"><i class="fa-solid fa-check" style="color:var(--color-primary)"></i></button>
+                <button class="delete-cat-btn" title="Löschen" data-id="${cat.id}"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+        `;
+
+        settingsCategoryList.appendChild(li);
+    });
+
+    setupCategoryListeners();
+}
+
+function setupCategoryListeners() {
+    const inputs = settingsCategoryList.querySelectorAll('.category-input');
+    const saveBtns = settingsCategoryList.querySelectorAll('.save-cat-btn');
+    const deleteBtns = settingsCategoryList.querySelectorAll('.delete-cat-btn');
+
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            const id = input.dataset.id;
+            const btn = settingsCategoryList.querySelector(`.save-cat-btn[data-id="${id}"]`);
+            if (input.value.trim() !== input.dataset.original) {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden');
+            }
+        });
+    });
+
+    saveBtns.forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            const input = settingsCategoryList.querySelector(`.category-input[data-id="${id}"]`);
+            const newName = input.value.trim();
+            const oldName = input.dataset.original;
+
+            if (!newName || newName === oldName) return;
+
+            btn.disabled = true;
+
+            // Update category
+            const { error } = await sbClient.from('categories').update({ name: newName }).eq('id', id);
+
+            if (!error) {
+                // Cascade update to recipes
+                await sbClient.from('recipes').update({ category: newName }).eq('category', oldName);
+                await loadCategories();
+                await loadRecipes();
+            } else {
+                alert('Fehler beim Ändern der Kategorie: ' + error.message);
+                btn.disabled = false;
+            }
+        });
+    });
+
+    deleteBtns.forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            const input = settingsCategoryList.querySelector(`.category-input[data-id="${id}"]`);
+
+            if (confirm(`Möchtest du die Kategorie "${input.dataset.original}" wirklich löschen? Zugehörige Rezepte behalten den Text, können aber nicht mehr gefiltert werden, bis du sie einer neuen Kategorie zuweist.`)) {
+                btn.disabled = true;
+                const { error } = await sbClient.from('categories').delete().eq('id', id);
+                if (!error) {
+                    await loadCategories();
+                } else {
+                    alert('Fehler beim Löschen: ' + error.message);
+                    btn.disabled = false;
+                }
+            }
+        });
+    });
 }
 
 function renderFolders() {
@@ -353,6 +507,81 @@ function setupEventListeners() {
             await sbClient.auth.signOut();
         });
     }
+
+    // Settings Modal & Tabs
+    settingsBtn.addEventListener('click', () => {
+        settingsModal.classList.remove('hidden');
+        passwordForm.reset();
+        passwordMessage.classList.add('hidden');
+    });
+
+    closeSettingsModalBtn.addEventListener('click', () => {
+        settingsModal.classList.add('hidden');
+    });
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            // Add active to clicked
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    // Settings - Change Password
+    passwordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newPass = document.getElementById('newPassword').value;
+
+        const btn = passwordForm.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Speichert...';
+
+        const { error } = await sbClient.auth.updateUser({ password: newPass });
+
+        btn.disabled = false;
+        btn.textContent = 'Passwort speichern';
+        passwordMessage.classList.remove('hidden');
+
+        if (error) {
+            passwordMessage.style.color = 'var(--color-accent)';
+            passwordMessage.textContent = 'Fehler: ' + error.message;
+        } else {
+            passwordMessage.style.color = 'var(--color-primary)';
+            passwordMessage.textContent = 'Passwort erfolgreich geändert!';
+            passwordForm.reset();
+        }
+    });
+
+    // Settings - Add Category
+    categoryForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = newCategoryNameInput.value.trim();
+        if (!name) return;
+
+        const btn = categoryForm.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+        const { error } = await sbClient.from('categories').insert([{
+            name: name,
+            user_id: currentUser.id,
+            createdAt: Date.now()
+        }]);
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-plus"></i> Hinzufügen';
+
+        if (error) {
+            alert('Fehler: ' + error.message);
+        } else {
+            categoryForm.reset();
+            await loadCategories();
+        }
+    });
 
     // View Toggles
     gridViewBtn.addEventListener('click', () => {
@@ -599,6 +828,10 @@ function setupEventListeners() {
         if (e.target === recipeModal) closeAddModal();
         if (e.target === viewModal) viewModal.classList.add('hidden');
         if (e.target === folderModal) closeFolderModal();
+        if (e.target === settingsModal) {
+            settingsModal.classList.add('hidden');
+            passwordMessage.classList.add('hidden');
+        }
     });
 }
 

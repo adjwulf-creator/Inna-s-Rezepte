@@ -36,8 +36,10 @@
                 <button id="addRecipeBtn" class="primary-btn">
                     <i class="fa-solid fa-plus"></i> Neues Rezept
                 </button>
-                <button id="logoutBtn" class="secondary-btn" style="padding: 0.6rem; border-radius: 50%;"
-                    title="Abmelden">
+                <button id="settingsBtn" class="icon-btn settings-btn" title="Einstellungen">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+                <button id="logoutBtn" class="icon-btn logout-btn" title="Abmelden">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </div>
@@ -66,11 +68,7 @@
                     <label for="categoryFilter">Kategorie:</label>
                     <select id="categoryFilter">
                         <option value="all">Alle Kategorien</option>
-                        <option value="Vorspeise">Vorspeise</option>
-                        <option value="Hauptgericht">Hauptgericht</option>
-                        <option value="Dessert">Dessert</option>
-                        <option value="Backen">Backen</option>
-                        <option value="Getränk">Getränk</option>
+                        <!-- Dynamic options via JS -->
                     </select>
                 </div>
                 <div class="control-group">
@@ -127,11 +125,7 @@
                 <div class="form-group">
                     <label for="recipeCategory">Kategorie</label>
                     <select id="recipeCategory" required>
-                        <option value="Vorspeise">Vorspeise</option>
-                        <option value="Hauptgericht" selected>Hauptgericht</option>
-                        <option value="Dessert">Dessert</option>
-                        <option value="Backen">Backen</option>
-                        <option value="Getränk">Getränk</option>
+                        <!-- Dynamic options via JS -->
                     </select>
                 </div>
 
@@ -196,6 +190,45 @@
                     <button type="submit" class="primary-btn" id="saveFolderBtn">Erstellen</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal hidden">
+        <div class="modal-content settings-modal-content">
+            <div class="modal-header">
+                <h2>Einstellungen</h2>
+                <button class="close-btn" id="closeSettingsModalBtn"><i class="fa-solid fa-times"></i></button>
+            </div>
+
+            <div class="settings-tabs">
+                <button class="tab-btn active" data-tab="profileTab">Profil</button>
+                <button class="tab-btn" data-tab="categoriesTab">Kategorien</button>
+            </div>
+
+            <div class="tab-content active" id="profileTab">
+                <h3>Passwort ändern</h3>
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label for="newPassword">Neues Passwort</label>
+                        <input type="password" id="newPassword" required minlength="6"
+                            placeholder="Mindestens 6 Zeichen">
+                    </div>
+                    <p id="passwordMessage" class="form-message hidden"></p>
+                    <button type="submit" class="primary-btn" id="savePasswordBtn">Passwort speichern</button>
+                </form>
+            </div>
+
+            <div class="tab-content" id="categoriesTab">
+                <h3>Kategorien verwalten</h3>
+                <form id="categoryForm" class="add-category-form">
+                    <input type="text" id="newCategoryName" required placeholder="Neue Kategorie...">
+                    <button type="submit" class="primary-btn"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
+                </form>
+                <ul id="settingsCategoryList" class="settings-list">
+                    <!-- Dynamic categories injected here -->
+                </ul>
+            </div>
         </div>
     </div>
 
