@@ -1711,19 +1711,20 @@ select:focus {
         font-size: 0.9rem !important;
     }
 
-    /* Custom select popups as centered modal on mobile */
+    /* Custom select popups on mobile - display inline since they're in a scrollable container */
     .multi-select-dropdown:not(.hidden) {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 85vw;
-        max-width: 350px;
-        max-height: 60vh;
-        border-radius: var(--radius-lg);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-        z-index: 1100;
-        padding: 1rem 0;
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: 100%;
+        max-width: none;
+        max-height: 200px;
+        border-radius: var(--radius-sm);
+        box-shadow: 0 4px 15px var(--color-shadow);
+        z-index: 100;
+        margin-top: 5px;
+        padding: 0.5rem 0;
     }
 
     .settings-modal-content {
