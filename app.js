@@ -567,7 +567,8 @@ function setupFolderItemListeners() {
         // Clone and replace to prevent duplicate listeners
         const newBtn = editFoldersBtn.cloneNode(true);
         editFoldersBtn.parentNode.replaceChild(newBtn, editFoldersBtn);
-        newBtn.addEventListener('click', () => {
+        newBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             isFolderEditMode = !isFolderEditMode;
             renderFolders();
         });
