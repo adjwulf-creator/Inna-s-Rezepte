@@ -602,6 +602,30 @@ button {
     gap: 1rem;
 }
 
+/* Active Folder Display */
+.active-folder-display {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
+    font-size: 1.1rem;
+    font-family: var(--font-heading);
+    box-shadow: 0 2px 8px var(--color-shadow);
+}
+
+.active-folder-display i {
+    font-size: 1.2rem;
+}
+
+.active-folder-display.hidden {
+    display: none !important;
+}
+
 .control-group label {
     color: var(--color-primary);
     font-size: 1.2rem;

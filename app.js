@@ -682,6 +682,24 @@ function renderFolders() {
         });
     }
 
+    // Update Active Folder Breadcrumb Display
+    const activeFolderDisplay = document.getElementById('activeFolderDisplay');
+    const activeFolderName = document.getElementById('activeFolderName');
+
+    if (activeFolderDisplay && activeFolderName) {
+        if (currentFolderId === 'all') {
+            activeFolderDisplay.classList.add('hidden');
+        } else {
+            const currentFolder = folders.find(f => f.id === currentFolderId);
+            if (currentFolder) {
+                activeFolderName.textContent = currentFolder.name;
+                activeFolderDisplay.classList.remove('hidden');
+            } else {
+                activeFolderDisplay.classList.add('hidden');
+            }
+        }
+    }
+
     setupFolderItemListeners();
 }
 
