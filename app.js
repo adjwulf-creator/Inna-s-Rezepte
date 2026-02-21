@@ -498,6 +498,16 @@ function setupSingleSelectDropdown(header, dropdown, container, initialValue, on
             header.querySelector('span').textContent = option.querySelector('span').textContent;
             dropdown.classList.add('hidden');
             if (onChange) onChange(option.dataset.value);
+
+            // If we are on mobile, also close the entire controls dropdown and reset icon
+            if (mobileDropdownControls && !mobileDropdownControls.classList.contains('hidden')) {
+                mobileDropdownControls.classList.add('hidden');
+                if (mobileControlsBtn) {
+                    const icon = mobileControlsBtn.querySelector('i');
+                    if (icon) icon.className = 'fa-solid fa-sliders';
+                    mobileControlsBtn.classList.remove('active-dropdown-btn');
+                }
+            }
         });
     });
 
