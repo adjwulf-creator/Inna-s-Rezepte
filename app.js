@@ -886,6 +886,102 @@ function setupFolderItemListeners() {
                 alert("Fehler beim Speichern der Reihenfolge.");
             }
         });
+
+        // --- Touch-based drag and drop for mobile ---
+        let touchLongPressTimer = null;
+        let touchDragging = false;
+
+        item.addEventListener('touchstart', (e) => {
+            if (!isFolderEditMode) return;
+            if (!item.classList.contains('sortable-folder')) return;
+
+            // Start a long-press timer (400ms)
+            touchLongPressTimer = setTimeout(() => {
+                touchDragging = true;
+                draggedFolderItem = item;
+                item.classList.add('dragging');
+                // Haptic feedback if available
+                if (navigator.vibrate) navigator.vibrate(30);
+            }, 400);
+        }, { passive: true });
+
+        item.addEventListener('touchmove', (e) => {
+            if (!touchDragging || draggedFolderItem !== item) {
+                // Cancel long-press if finger moves before timer fires
+                clearTimeout(touchLongPressTimer);
+                return;
+            }
+            e.preventDefault();
+
+            const touch = e.touches[0];
+            const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (!targetEl) return;
+            const targetItem = targetEl.closest('.sortable-folder');
+
+            // Clear all drag-over indicators
+            sortableItems.forEach(si => si.classList.remove('drag-over'));
+
+            if (targetItem && targetItem !== item) {
+                // Show indicator on target
+                targetItem.classList.add('drag-over');
+
+                // Move the dragged element in the DOM
+                const bounding = targetItem.getBoundingClientRect();
+                const midpoint = bounding.y + (bounding.height / 2);
+                if (touch.clientY > midpoint) {
+                    targetItem.after(item);
+                } else {
+                    targetItem.before(item);
+                }
+            }
+
+            // Auto-scroll the dropdown container if near edges
+            const scrollContainer = item.closest('.mobile-dropdown-content') || item.closest('.sidebar');
+            if (scrollContainer) {
+                const containerRect = scrollContainer.getBoundingClientRect();
+                const edgeThreshold = 40;
+                if (touch.clientY - containerRect.top < edgeThreshold) {
+                    scrollContainer.scrollTop -= 8;
+                } else if (containerRect.bottom - touch.clientY < edgeThreshold) {
+                    scrollContainer.scrollTop += 8;
+                }
+            }
+        }, { passive: false });
+
+        item.addEventListener('touchend', async () => {
+            clearTimeout(touchLongPressTimer);
+            if (!touchDragging || draggedFolderItem !== item) return;
+
+            touchDragging = false;
+            item.classList.remove('dragging');
+            sortableItems.forEach(si => si.classList.remove('drag-over'));
+            draggedFolderItem = null;
+
+            // Save new order
+            const currentItems = Array.from(folderList.querySelectorAll('.sortable-folder'));
+            const orderUpdates = currentItems.map((li, index) => ({
+                id: li.dataset.folderId,
+                order_index: index,
+                user_id: currentUser.id
+            }));
+
+            try {
+                const { error } = await sbClient.from('folders').upsert(orderUpdates, { onConflict: 'id' });
+                if (error) throw error;
+                await loadFolders();
+            } catch (err) {
+                console.error("Order save err:", err);
+                alert("Fehler beim Speichern der Reihenfolge.");
+            }
+        }, { passive: true });
+
+        item.addEventListener('touchcancel', () => {
+            clearTimeout(touchLongPressTimer);
+            touchDragging = false;
+            item.classList.remove('dragging');
+            sortableItems.forEach(si => si.classList.remove('drag-over'));
+            draggedFolderItem = null;
+        }, { passive: true });
     });
 }
 
