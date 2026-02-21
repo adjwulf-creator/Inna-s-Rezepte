@@ -1323,11 +1323,32 @@ function openViewModal(recipe) {
     }
 
     // Format ingredients as list
-    const ingredientsList = recipe.ingredients
-        .split('\n')
-        .filter(i => i.trim() !== '')
-        .map(i => `<li>${i}</li>`)
-        .join('');
+    let ingredientsHtml = '';
+    if (recipe.ingredients && recipe.ingredients.trim() !== '') {
+        const ingredientsItems = recipe.ingredients
+            .split('\n')
+            .filter(i => i.trim() !== '')
+            .map(i => `<li>${i}</li>`)
+            .join('');
+        ingredientsHtml = `
+            <div class="ingredients-list">
+                <h4>Zutaten</h4>
+                <ul>
+                    ${ingredientsItems}
+                </ul>
+            </div>
+        `;
+    }
+
+    let instructionsHtml = '';
+    if (recipe.instructions && recipe.instructions.trim() !== '') {
+        instructionsHtml = `
+            <div class="instructions-section">
+                <h4>Zubereitung</h4>
+                <p>${recipe.instructions}</p>
+            </div>
+        `;
+    }
 
     viewRecipeDetails.innerHTML = `
         <div class="recipe-detail-header">
@@ -1340,16 +1361,8 @@ function openViewModal(recipe) {
             </div>
         </div>
         <div class="recipe-detail-body">
-            <div class="ingredients-list">
-                <h4>Zutaten</h4>
-                <ul>
-                    ${ingredientsList}
-                </ul>
-            </div>
-            <div class="instructions-section">
-                <h4>Zubereitung</h4>
-                <p>${recipe.instructions}</p>
-            </div>
+            ${ingredientsHtml}
+            ${instructionsHtml}
         </div>
     `;
 
