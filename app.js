@@ -192,7 +192,7 @@ if (mobileFoldersBtn && mobileControlsBtn) {
         }
     });
 
-    // Observer to handle body scroll lock and blur effect when dropdowns are open
+    // Observer to handle body scroll lock and blur effect when dropdowns or modals are open
     const overlayObserver = new MutationObserver(() => {
         const foldersOpen = mobileDropdownFolders && !mobileDropdownFolders.classList.contains('hidden');
         const controlsOpen = mobileDropdownControls && !mobileDropdownControls.classList.contains('hidden');
@@ -201,9 +201,22 @@ if (mobileFoldersBtn && mobileControlsBtn) {
         } else {
             document.body.classList.remove('mobile-dropdown-active');
         }
+
+        const openModal = document.querySelector('.modal:not(.hidden)');
+        if (openModal) {
+            document.body.classList.add('modal-active');
+        } else {
+            document.body.classList.remove('modal-active');
+        }
     });
+
     if (mobileDropdownFolders) overlayObserver.observe(mobileDropdownFolders, { attributes: true, attributeFilter: ['class'] });
     if (mobileDropdownControls) overlayObserver.observe(mobileDropdownControls, { attributes: true, attributeFilter: ['class'] });
+
+    // Also observe all modals
+    document.querySelectorAll('.modal').forEach(modal => {
+        overlayObserver.observe(modal, { attributes: true, attributeFilter: ['class'] });
+    });
 }
 
 // isTouchScrolling flag for iOS Safari phantom click prevention

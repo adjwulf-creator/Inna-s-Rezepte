@@ -1768,8 +1768,9 @@ select:focus {
         padding: 1.5rem;
     }
 
-    /* Mobile Dropdown Active Overlay */
-    body.mobile-dropdown-active {
+    /* Mobile Dropdown & Modal Active Overlay */
+    body.mobile-dropdown-active,
+    body.modal-active {
         overflow: hidden;
         /* iOS Safari prevents scrolling only if body is fixed */
         position: fixed;
@@ -1777,7 +1778,8 @@ select:focus {
         height: 100%;
     }
 
-    body.mobile-dropdown-active .content-area {
+    body.mobile-dropdown-active .content-area,
+    body.modal-active .content-area {
         filter: blur(4px);
         pointer-events: none;
         user-select: none;
