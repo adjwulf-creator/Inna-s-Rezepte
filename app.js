@@ -168,15 +168,15 @@ if (mobileFoldersBtn && mobileControlsBtn) {
     });
 }
 
-// Close mobile dropdowns on scroll (desktop) and touchmove (iOS Safari)
-// Only close when scrolling the background page, not inside modals
-function closeMobileDropdowns(e) {
-    // Don't close if the scroll/touch happened inside a modal
-    if (e && e.target && e.target.closest && e.target.closest('.modal-content')) return;
+// Close mobile dropdowns on touchmove (mobile only)
+// Skip if any modal is currently open (user is scrolling inside a popup)
+function closeMobileDropdowns() {
+    // Check if any modal is currently visible
+    const openModal = document.querySelector('.modal:not(.hidden)');
+    if (openModal) return;
     if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
     if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
 }
-window.addEventListener('scroll', closeMobileDropdowns, { passive: true });
 document.addEventListener('touchmove', closeMobileDropdowns, { passive: true });
 
 // Initialize app
