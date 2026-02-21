@@ -105,6 +105,12 @@ h4 {
     align-items: center;
 }
 
+.header-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 .search-bar {
     position: relative;
     display: flex;
@@ -1321,19 +1327,47 @@ select:focus {
     }
 
     .header-content {
-        flex-direction: column;
-        align-items: flex-start;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
     }
 
     .header-actions {
+        display: contents;
+    }
+
+    .header-buttons {
+        order: 2;
+    }
+
+    .search-bar {
         width: 100%;
-        flex-direction: column;
-        align-items: stretch;
+        order: 3;
     }
 
     .search-bar input,
     .search-bar input:focus {
         width: 100%;
+    }
+
+    .hide-on-mobile {
+        display: none;
+    }
+
+    #addRecipeBtn {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #addRecipeBtn i {
+        margin: 0;
     }
 
     .controls {
