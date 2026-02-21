@@ -1638,7 +1638,12 @@ select:focus {
 
     .control-group {
         width: 100%;
-        justify-content: space-between;
+        justify-content: flex-start;
+        gap: 1.5rem;
+    }
+
+    .control-group .multi-select {
+        flex: 1;
     }
 
     .recipe-detail-body {
