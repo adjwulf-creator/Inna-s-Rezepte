@@ -397,10 +397,12 @@ button {
     opacity: 0.6;
 }
 
-.edit-folder-btn:hover {
-    background-color: var(--color-primary);
-    color: white;
-    opacity: 1;
+@media (hover: hover) {
+    .edit-folder-btn:hover {
+        background-color: var(--color-primary);
+        color: white;
+        opacity: 1;
+    }
 }
 
 .edit-folder-btn.active {
