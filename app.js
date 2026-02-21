@@ -126,6 +126,12 @@ if (mobileFoldersBtn && mobileControlsBtn) {
     });
 }
 
+// Close mobile dropdowns on scroll
+window.addEventListener('scroll', () => {
+    if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
+    if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
+}, { passive: true });
+
 // Initialize app
 async function initApp() {
     adaptMobileLayout();
