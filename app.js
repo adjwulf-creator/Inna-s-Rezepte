@@ -282,37 +282,14 @@ function renderCategories() {
     if (categoryFilterHeader && !categoryFilterHeader._hasListener) {
         categoryFilterHeader._hasListener = true;
 
-        function toggleCategoryDropdown() {
-            const isOpening = categoryFilterDropdown.classList.contains('hidden');
-            categoryFilterDropdown.classList.toggle('hidden');
-
-            // Manage backdrop on mobile
-            const existingBackdrop = document.querySelector('.multi-select-backdrop');
-            if (isOpening && window.innerWidth <= 768) {
-                if (!existingBackdrop) {
-                    const backdrop = document.createElement('div');
-                    backdrop.className = 'multi-select-backdrop';
-                    backdrop.addEventListener('click', () => {
-                        categoryFilterDropdown.classList.add('hidden');
-                        backdrop.remove();
-                    });
-                    document.body.appendChild(backdrop);
-                }
-            } else if (existingBackdrop) {
-                existingBackdrop.remove();
-            }
-        }
-
         categoryFilterHeader.addEventListener('click', (e) => {
             e.stopPropagation();
-            toggleCategoryDropdown();
+            categoryFilterDropdown.classList.toggle('hidden');
         });
-        // Close when clicking outside (desktop)
+        // Close when clicking outside
         document.addEventListener('click', (e) => {
             if (categoryFilterContainer && !categoryFilterContainer.contains(e.target)) {
                 categoryFilterDropdown.classList.add('hidden');
-                const backdrop = document.querySelector('.multi-select-backdrop');
-                if (backdrop) backdrop.remove();
             }
         });
     }
