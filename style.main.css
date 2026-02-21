@@ -98,7 +98,7 @@ h4 {
 
 .mobile-dropdown-content {
     position: fixed;
-    top: 0;
+    top: 110px;
     left: 0;
     right: 0;
     width: 100%;
@@ -107,7 +107,8 @@ h4 {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     z-index: 95;
-    max-height: 80vh;
+    max-height: calc(100vh - 110px);
+    max-height: calc(100dvh - 110px);
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
