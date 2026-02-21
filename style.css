@@ -88,13 +88,6 @@ h4 {
     color: var(--color-primary);
 }
 
-.logo-area {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex: 1;
-}
 
 .header-icons {
     display: flex;
@@ -1341,6 +1334,7 @@ select:focus {
 
     .logo {
         gap: 0.5rem;
+        order: 1;
     }
 
     .logo h1 {
@@ -1362,24 +1356,22 @@ select:focus {
 
     .header-content {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
         gap: 1rem;
     }
 
-    .logo-area {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0.5rem;
+    .header-actions {
+        display: contents;
     }
 
-    .header-actions {
-        width: 100%;
+    .header-icons {
+        order: 2;
     }
 
     .search-actions {
+        order: 3;
         width: 100%;
         gap: 0.5rem;
     }
