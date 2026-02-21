@@ -161,31 +161,18 @@ if (mobileFoldersBtn && mobileControlsBtn) {
             dropdown.style.maxHeight = 'calc(100dvh - ' + header.offsetHeight + 'px)';
         }
     }
-    function updateBtnState(btn, originalIconClass, isOpen) {
-        const icon = btn.querySelector('i');
-        if (isOpen) {
-            icon.className = 'fa-solid fa-xmark';
-            btn.classList.add('active-dropdown-btn');
-        } else {
-            icon.className = originalIconClass;
-            btn.classList.remove('active-dropdown-btn');
-        }
-    }
     mobileFoldersBtn.addEventListener('click', () => {
         mobileDropdownFolders.classList.toggle('hidden');
         mobileDropdownControls.classList.add('hidden');
         const foldersOpen = !mobileDropdownFolders.classList.contains('hidden');
-        updateBtnState(mobileFoldersBtn, 'fa-regular fa-folder-open', foldersOpen);
-        updateBtnState(mobileControlsBtn, 'fa-solid fa-sliders', false);
         if (foldersOpen) positionDropdown(mobileDropdownFolders);
         document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.add('hidden'));
     });
+
     mobileControlsBtn.addEventListener('click', () => {
         mobileDropdownControls.classList.toggle('hidden');
         mobileDropdownFolders.classList.add('hidden');
         const controlsOpen = !mobileDropdownControls.classList.contains('hidden');
-        updateBtnState(mobileControlsBtn, 'fa-solid fa-sliders', controlsOpen);
-        updateBtnState(mobileFoldersBtn, 'fa-regular fa-folder-open', false);
         if (controlsOpen) positionDropdown(mobileDropdownControls);
         if (!controlsOpen) {
             document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.add('hidden'));
@@ -196,11 +183,36 @@ if (mobileFoldersBtn && mobileControlsBtn) {
     const overlayObserver = new MutationObserver(() => {
         const foldersOpen = mobileDropdownFolders && !mobileDropdownFolders.classList.contains('hidden');
         const controlsOpen = mobileDropdownControls && !mobileDropdownControls.classList.contains('hidden');
+
         if (foldersOpen || controlsOpen) {
             document.body.classList.add('mobile-dropdown-active');
         } else {
             document.body.classList.remove('mobile-dropdown-active');
         }
+
+        // Robustly synchronize the button icons with the actual dropdown hidden states
+        if (mobileFoldersBtn) {
+            const icon = mobileFoldersBtn.querySelector('i');
+            if (foldersOpen) {
+                if (icon) icon.className = 'fa-solid fa-xmark';
+                mobileFoldersBtn.classList.add('active-dropdown-btn');
+            } else {
+                if (icon) icon.className = 'fa-regular fa-folder-open';
+                mobileFoldersBtn.classList.remove('active-dropdown-btn');
+            }
+        }
+
+        if (mobileControlsBtn) {
+            const icon = mobileControlsBtn.querySelector('i');
+            if (controlsOpen) {
+                if (icon) icon.className = 'fa-solid fa-xmark';
+                mobileControlsBtn.classList.add('active-dropdown-btn');
+            } else {
+                if (icon) icon.className = 'fa-solid fa-sliders';
+                mobileControlsBtn.classList.remove('active-dropdown-btn');
+            }
+        }
+
 
         const openModal = document.querySelector('.modal:not(.hidden)');
         if (openModal) {
@@ -236,18 +248,12 @@ document.addEventListener('click', (e) => {
     if (mobileDropdownFolders && mobileDropdownFolders.contains(e.target)) return;
     if (mobileDropdownControls && mobileDropdownControls.contains(e.target)) return;
 
-    // Close dropdowns, reset button icons, and consume the click
+    // Close dropdowns (icon states are synchronized by the MutationObserver)
     if (foldersOpen) {
         mobileDropdownFolders.classList.add('hidden');
-        const icon = mobileFoldersBtn.querySelector('i');
-        icon.className = 'fa-regular fa-folder-open';
-        mobileFoldersBtn.classList.remove('active-dropdown-btn');
     }
     if (controlsOpen) {
         mobileDropdownControls.classList.add('hidden');
-        const icon = mobileControlsBtn.querySelector('i');
-        icon.className = 'fa-solid fa-sliders';
-        mobileControlsBtn.classList.remove('active-dropdown-btn');
     }
     e.stopPropagation();
     e.preventDefault();
@@ -499,14 +505,9 @@ function setupSingleSelectDropdown(header, dropdown, container, initialValue, on
             dropdown.classList.add('hidden');
             if (onChange) onChange(option.dataset.value);
 
-            // If we are on mobile, also close the entire controls dropdown and reset icon
+            // If we are on mobile, also close the entire controls dropdown (icon sync handled by MutationObserver)
             if (mobileDropdownControls && !mobileDropdownControls.classList.contains('hidden')) {
                 mobileDropdownControls.classList.add('hidden');
-                if (mobileControlsBtn) {
-                    const icon = mobileControlsBtn.querySelector('i');
-                    if (icon) icon.className = 'fa-solid fa-sliders';
-                    mobileControlsBtn.classList.remove('active-dropdown-btn');
-                }
             }
         });
     });
