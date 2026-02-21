@@ -1234,7 +1234,6 @@ function setupEventListeners() {
     setupSingleSelectDropdown(viewModeHeader, viewModeDropdown, viewModeContainer, currentViewMode, (val) => {
         currentViewMode = val;
         applyViewState();
-        if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
     });
 
     // Search & Filter
@@ -1244,7 +1243,6 @@ function setupEventListeners() {
     // Sort — custom dropdown
     setupSingleSelectDropdown(sortSelectHeader, sortSelectDropdown, sortSelectContainer, 'newest', (val) => {
         renderRecipes();
-        if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
     });
 
     // Folders
