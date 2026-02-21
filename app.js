@@ -686,7 +686,14 @@ function setupFolderItemListeners() {
             currentFolderId = item.dataset.folderId;
             renderFolders(); // Update active class
             renderRecipes(); // Filter recipes
-            if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
+            if (mobileDropdownFolders) {
+                mobileDropdownFolders.classList.add('hidden');
+                if (mobileFoldersBtn) {
+                    const icon = mobileFoldersBtn.querySelector('i');
+                    if (icon) icon.className = 'fa-regular fa-folder-open';
+                    mobileFoldersBtn.classList.remove('active-dropdown-btn');
+                }
+            }
         });
     });
 
