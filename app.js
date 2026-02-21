@@ -708,6 +708,21 @@ function setupRecipeDragListeners() {
 
 // Setup all event listeners
 function setupEventListeners() {
+    // Close mobile dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        const isClickInsideFoldersBtn = mobileFoldersBtn && mobileFoldersBtn.contains(e.target);
+        const isClickInsideControlsBtn = mobileControlsBtn && mobileControlsBtn.contains(e.target);
+        const isClickInsideFoldersDropdown = mobileDropdownFolders && mobileDropdownFolders.contains(e.target);
+        const isClickInsideControlsDropdown = mobileDropdownControls && mobileDropdownControls.contains(e.target);
+
+        if (!isClickInsideFoldersBtn && !isClickInsideFoldersDropdown && mobileDropdownFolders) {
+            mobileDropdownFolders.classList.add('hidden');
+        }
+        if (!isClickInsideControlsBtn && !isClickInsideControlsDropdown && mobileDropdownControls) {
+            mobileDropdownControls.classList.add('hidden');
+        }
+    });
+
     // Auth - Toggle Mode
     authToggleLink.addEventListener('click', (e) => {
         e.preventDefault();

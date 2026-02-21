@@ -510,6 +510,23 @@ select:focus {
     gap: 1rem;
 }
 
+.recipe-grid.list-view .recipe-card {
+    flex-direction: row;
+    align-items: center;
+    height: 120px;
+}
+
+.recipe-grid.list-view .card-img-container {
+    width: 120px;
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.recipe-grid.list-view .card-content {
+    padding: 1rem 1.5rem;
+    justify-content: center;
+}
+
 .recipe-grid.hidden {
     display: none;
 }
@@ -1457,5 +1474,21 @@ select:focus {
 
     .recipe-detail-body {
         grid-template-columns: 1fr;
+    }
+
+    .recipe-grid.list-view .recipe-card {
+        height: 100px;
+    }
+
+    .recipe-grid.list-view .card-img-container {
+        width: 100px;
+    }
+
+    .recipe-grid.list-view .card-content {
+        padding: 0.8rem;
+    }
+
+    .recipe-grid.list-view .card-content h3 {
+        font-size: 1.1rem;
     }
 }
