@@ -260,6 +260,7 @@ button {
 .active-dropdown-btn i {
     background-color: var(--color-secondary) !important;
     color: white !important;
+    -webkit-text-fill-color: white !important;
 }
 
 .danger-btn {
