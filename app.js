@@ -123,10 +123,14 @@ if (mobileFoldersBtn && mobileControlsBtn) {
     mobileFoldersBtn.addEventListener('click', () => {
         mobileDropdownFolders.classList.toggle('hidden');
         mobileDropdownControls.classList.add('hidden'); // Close the other
+        document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.add('hidden'));
     });
     mobileControlsBtn.addEventListener('click', () => {
         mobileDropdownControls.classList.toggle('hidden');
         mobileDropdownFolders.classList.add('hidden'); // Close the other
+        if (mobileDropdownControls.classList.contains('hidden')) {
+            document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.add('hidden'));
+        }
     });
 }
 
@@ -288,6 +292,9 @@ function renderCategories() {
 
         categoryFilterHeader.addEventListener('click', (e) => {
             e.stopPropagation();
+            document.querySelectorAll('.multi-select-dropdown').forEach(d => {
+                if (d !== categoryFilterDropdown) d.classList.add('hidden');
+            });
             categoryFilterDropdown.classList.toggle('hidden');
         });
         // Close when clicking outside
