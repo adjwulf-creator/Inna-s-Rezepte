@@ -1843,4 +1843,14 @@ select:focus {
     .content-area {
         transition: filter 0.3s ease, opacity 0.3s ease;
     }
+
+    .mobile-dropdown-content .sidebar-header {
+        position: sticky;
+        top: -1.5rem;
+        background: var(--color-surface);
+        z-index: 10;
+        margin: -1.5rem -1.5rem 1rem -1.5rem;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--color-border);
+    }
 }
