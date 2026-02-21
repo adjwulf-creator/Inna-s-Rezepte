@@ -126,11 +126,13 @@ if (mobileFoldersBtn && mobileControlsBtn) {
     });
 }
 
-// Close mobile dropdowns on scroll
-window.addEventListener('scroll', () => {
+// Close mobile dropdowns on scroll (desktop) and touchmove (iOS Safari)
+function closeMobileDropdowns() {
     if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
     if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
-}, { passive: true });
+}
+window.addEventListener('scroll', closeMobileDropdowns, { passive: true });
+document.addEventListener('touchmove', closeMobileDropdowns, { passive: true });
 
 // Initialize app
 async function initApp() {
