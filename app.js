@@ -1928,8 +1928,19 @@ function setupEventListeners() {
 function openViewModal(recipe) {
     currentViewRecipeId = recipe.id;
 
-    // Persistence: Load checked state from DB (checked_ingredients is an array of indices)
-    let savedCheckedIndices = Array.isArray(recipe.checked_ingredients) ? recipe.checked_ingredients : [];
+    // Persistence: Load checked state from DB (can be array or JSON string)
+    let savedCheckedIndices = [];
+    if (recipe.checked_ingredients) {
+        if (Array.isArray(recipe.checked_ingredients)) {
+            savedCheckedIndices = recipe.checked_ingredients;
+        } else if (typeof recipe.checked_ingredients === 'string' && recipe.checked_ingredients.trim() !== '') {
+            try {
+                savedCheckedIndices = JSON.parse(recipe.checked_ingredients);
+            } catch (e) {
+                console.warn("Could not parse checked_ingredients string", e);
+            }
+        }
+    }
 
     // Set up images for gallery and lightbox
     currentLightboxImages = recipe.images && recipe.images.length > 0
@@ -2022,7 +2033,8 @@ function openViewModal(recipe) {
     let saveTimeout = null;
     const checkboxes = viewRecipeDetails.querySelectorAll('.ingredient-checkbox');
     checkboxes.forEach(cb => {
-        cb.addEventListener('change', () => {
+        // Use both change and input to cover all mobile behaviors
+        const handleChange = () => {
             const label = cb.closest('.ingredient-checkbox-label');
             if (label) {
                 if (cb.checked) label.classList.add('is-checked');
@@ -2045,12 +2057,15 @@ function openViewModal(recipe) {
                         .update({ checked_ingredients: currentChecked })
                         .eq('id', recipe.id);
                     if (error) throw error;
-                    console.log("Ingredient status synced to DB");
+                    console.log("Ingredient status synced to DB for recipe:", recipe.id);
                 } catch (err) {
                     console.error("Error syncing ingredients to DB:", err);
                 }
-            }, 500);
-        });
+            }, 300); // Slightly faster debounce
+        };
+
+        cb.addEventListener('change', handleChange);
+        cb.addEventListener('input', handleChange); // Extra safety for Safari mobile
     });
 
     // Reset scroll position
