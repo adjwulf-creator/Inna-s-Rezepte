@@ -983,27 +983,41 @@ function setupFolderItemListeners() {
 
             // Folder sort logic
             e.preventDefault();
-            if (!isFolderEditMode || item === draggedFolderItem) return;
+            if (!isFolderEditMode) return;
             if (!item.classList.contains('sortable-folder')) return;
-            e.dataTransfer.dropEffect = 'move';
-            item.classList.add('drag-over');
 
-            // Desktop Auto-scroll Logic
-            const scrollContainer = folderList;
-            if (scrollContainer) {
-                const rect = scrollContainer.getBoundingClientRect();
-                const edgeThreshold = 60;
-                const distFromTop = e.clientY - rect.top;
-                const distFromBottom = rect.bottom - e.clientY;
+            if (draggedFolderItem && item !== draggedFolderItem) {
+                e.dataTransfer.dropEffect = 'move';
 
-                if (distFromTop < edgeThreshold) {
-                    autoScrollVelocity = -Math.max(5, (1 - distFromTop / edgeThreshold) * 20);
-                    if (!autoScrollRAF) startAutoScroll();
-                } else if (distFromBottom < edgeThreshold) {
-                    autoScrollVelocity = Math.max(5, (1 - distFromBottom / edgeThreshold) * 20);
-                    if (!autoScrollRAF) startAutoScroll();
+                // Live reordering: swap items in DOM immediately
+                const bounding = item.getBoundingClientRect();
+                const midpoint = bounding.y + (bounding.height / 2);
+
+                if (e.clientY > midpoint) {
+                    item.after(draggedFolderItem);
                 } else {
-                    stopAutoScroll();
+                    item.before(draggedFolderItem);
+                }
+            }
+
+            // Desktop Auto-scroll Logic (Always run during drag even if over self)
+            if (draggedFolderItem || draggedRecipeCard) {
+                const scrollContainer = folderList;
+                if (scrollContainer) {
+                    const rect = scrollContainer.getBoundingClientRect();
+                    const edgeThreshold = 60;
+                    const distFromTop = e.clientY - rect.top;
+                    const distFromBottom = rect.bottom - e.clientY;
+
+                    if (distFromTop < edgeThreshold) {
+                        autoScrollVelocity = -Math.max(5, (1 - distFromTop / edgeThreshold) * 20);
+                        if (!autoScrollRAF) startAutoScroll();
+                    } else if (distFromBottom < edgeThreshold) {
+                        autoScrollVelocity = Math.max(5, (1 - distFromBottom / edgeThreshold) * 20);
+                        if (!autoScrollRAF) startAutoScroll();
+                    } else {
+                        stopAutoScroll();
+                    }
                 }
             }
         });
@@ -1042,18 +1056,9 @@ function setupFolderItemListeners() {
                 return;
             }
 
-            // Handling Folder Sort logic
-            if (!isFolderEditMode || item === draggedFolderItem || !draggedFolderItem) return;
-            if (!item.classList.contains('sortable-folder')) return;
-
-            // Determine drop position (before or after)
-            const bounding = item.getBoundingClientRect();
-            const offset = bounding.y + (bounding.height / 2);
-            if (e.clientY - offset > 0) {
-                item.after(draggedFolderItem);
-            } else {
-                item.before(draggedFolderItem);
-            }
+            // Handling Folder Sort logic: Already handled live in dragover,
+            // just save the final order now.
+            if (!isFolderEditMode || !draggedFolderItem) return;
 
             // Save new order using centralized function
             saveFolderOrder();
