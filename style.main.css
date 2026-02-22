@@ -423,6 +423,8 @@ button {
     padding-top: 0;
     margin-right: -1.5rem;
     padding-right: 1rem;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25px, black 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 25px, black 100%);
 }
 
 .folder-item {
@@ -2216,6 +2218,8 @@ select:focus {
         touch-action: pan-y;
         flex-grow: 1;
         min-height: 0;
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25px, black 100%);
+        mask-image: linear-gradient(to bottom, transparent 0%, black 25px, black 100%);
     }
 
     .folder-list.folder-edit-mode .folder-item .folder-actions {
