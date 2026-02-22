@@ -315,8 +315,9 @@ button {
     /* Offset sidebar padding */
     background: var(--color-surface);
     z-index: 10;
-    margin: 0 -1.5rem 0 -1.5rem;
-    padding: 1.2rem 1.5rem 0.2rem 1.5rem;
+    margin: -1.5rem -1.5rem 0.5rem -1.5rem;
+    padding: 0.5rem 1.5rem 0.3rem 1.5rem;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 .sidebar-header {
@@ -379,10 +380,9 @@ button {
 .sidebar-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px dashed var(--color-border);
+    align-items: flex-end;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0;
 }
 
 .sidebar-header h2 {
