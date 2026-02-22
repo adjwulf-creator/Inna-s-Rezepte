@@ -109,10 +109,10 @@ h4 {
     z-index: 95;
     max-height: calc(100vh - 110px);
     max-height: calc(100dvh - 110px);
-    overflow-y: scroll;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
     overflow-x: hidden;
+    touch-action: pan-y;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -526,9 +526,11 @@ button {
     color: var(--color-accent);
 }
 
-.folder-item:hover {
-    background: var(--color-bg);
-    color: var(--color-text);
+@media (hover: hover) {
+    .folder-item:hover {
+        background: var(--color-bg);
+        color: var(--color-text);
+    }
 }
 
 .folder-item.active {
@@ -2131,5 +2133,7 @@ select:focus {
     .mobile-dropdown-content .folder-list {
         margin-right: 0;
         padding-right: 0;
+        overflow-y: visible;
+        /* Disable nested scrolling to fix iOS unresponsiveness */
     }
 }
