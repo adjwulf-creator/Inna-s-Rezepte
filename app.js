@@ -672,6 +672,16 @@ function setupCategoryListeners() {
 }
 
 function renderFolders() {
+    // Ensure folders are always sorted by order_index, then by creation date
+    if (folders) {
+        folders.sort((a, b) => {
+            const orderA = a.order_index !== undefined && a.order_index !== null ? a.order_index : 9999;
+            const orderB = b.order_index !== undefined && b.order_index !== null ? b.order_index : 9999;
+            if (orderA !== orderB) return orderA - orderB;
+            return (a.createdAt || 0) - (b.createdAt || 0);
+        });
+    }
+
     const editFoldersBtn = document.getElementById('editFoldersBtn');
     if (editFoldersBtn) {
         if (isFolderEditMode) {
@@ -826,12 +836,18 @@ function setupFolderItemListeners() {
         editFoldersBtn.parentNode.replaceChild(newBtn, editFoldersBtn);
         newBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
+
             if (isFolderEditMode) {
-                // We are exiting edit mode: save order first
+                // We are exiting edit mode: save current order state to DB
                 await saveFolderOrder();
+                isFolderEditMode = false;
+                isFolderWiggling = false;
+            } else {
+                // We are entering edit mode: just toggle state
+                isFolderEditMode = true;
+                isFolderWiggling = true;
             }
-            isFolderEditMode = !isFolderEditMode;
-            isFolderWiggling = isFolderEditMode;
+
             renderFolders();
         });
     }
