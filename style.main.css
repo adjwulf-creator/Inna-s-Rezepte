@@ -465,6 +465,21 @@ button {
     color: white;
 }
 
+.folder-item[data-folder-id="all"] {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--color-surface);
+    margin-bottom: 0.8rem;
+    border-bottom: 1px dashed var(--color-border);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.folder-item[data-folder-id="all"].active {
+    background: var(--color-primary);
+    color: white;
+}
+
 .folder-item.active .folder-actions button {
     color: rgba(255, 255, 255, 0.8);
 }
