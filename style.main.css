@@ -2173,6 +2173,15 @@ select:focus {
         transition: filter 0.3s ease, opacity 0.3s ease;
     }
 
+    /* Ensure no double scrolling: only .folder-list should scroll */
+    .mobile-dropdown-content .sidebar {
+        overflow: visible;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        max-height: none;
+    }
+
     .mobile-dropdown-content .sidebar-sticky-section {
         position: sticky;
         top: 0;
