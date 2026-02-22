@@ -130,9 +130,7 @@ h4 {
     /* Fallback to small viewport height for safety, but bottom:0 handles the bleed */
     height: auto;
     flex: 1;
-    overflow-y: hidden;
     overscroll-behavior: none;
-    touch-action: none;
     gap: 0;
 }
 
