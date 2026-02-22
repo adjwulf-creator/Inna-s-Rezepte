@@ -827,6 +827,7 @@ function setupFolderItemListeners() {
         newBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             isFolderEditMode = !isFolderEditMode;
+            isFolderWiggling = isFolderEditMode; // Start/Stop wiggling immediately
             renderFolders();
         });
     }
