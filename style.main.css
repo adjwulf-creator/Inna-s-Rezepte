@@ -2103,10 +2103,16 @@ select:focus {
     .mobile-dropdown-content .sidebar-header {
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        /* Align icons to the baseline of the button */
         gap: 0.5rem;
         margin-bottom: 0;
-        padding-bottom: 0.8rem;
+        padding-bottom: 1rem;
+    }
+
+    .mobile-dropdown-content .sidebar-header>div:last-child {
+        padding-bottom: 0.2rem;
+        /* Minor tweak to center icons visually with the button */
     }
 
     .mobile-dropdown-content .sidebar-header>div:first-child {
