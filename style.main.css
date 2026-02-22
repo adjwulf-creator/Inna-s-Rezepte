@@ -502,6 +502,7 @@ button {
 
 .folder-list.folder-edit-mode .folder-item .folder-actions {
     display: flex;
+    gap: 0.3rem;
 }
 
 .folder-list.folder-edit-mode .folder-item {
@@ -540,7 +541,7 @@ button {
 }
 
 .rename-folder-btn {
-    margin-right: 0.5rem;
+    /* Spacing handled by flex gap */
 }
 
 @media (hover: hover) {
