@@ -539,6 +539,10 @@ button {
     color: var(--color-accent);
 }
 
+.rename-folder-btn {
+    margin-right: 0.5rem;
+}
+
 @media (hover: hover) {
     .folder-item:hover {
         background: var(--color-bg);

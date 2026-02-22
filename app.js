@@ -713,6 +713,9 @@ function renderFolders() {
                     <span title="${folder.name}">${folder.name}</span>
                 </div>
                 <div class="folder-actions">
+                    <button class="rename-folder-btn" title="Ordner umbenennen" data-id="${folder.id}" data-name="${folder.name}">
+                        <i class="fa-solid fa-pencil"></i>
+                    </button>
                     <button class="delete-folder-btn" title="Ordner löschen" data-id="${folder.id}">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
@@ -822,6 +825,32 @@ function setupFolderItemListeners() {
             renderRecipes();
         });
     }
+
+    // Rename Folder clicks
+    const renameBtns = folderList.querySelectorAll('.rename-folder-btn');
+    renameBtns.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const id = btn.dataset.id;
+            const currentName = btn.dataset.name;
+            const newName = prompt(t('prompt_rename_folder'), currentName);
+
+            if (newName && newName.trim() !== '' && newName !== currentName) {
+                const trimmedName = newName.trim();
+                const { error } = await sbClient.from('folders').update({ name: trimmedName }).eq('id', id);
+
+                if (!error) {
+                    await loadFolders();
+                    if (currentFolderId === id) {
+                        const activeFolderName = document.getElementById('activeFolderName');
+                        if (activeFolderName) activeFolderName.textContent = trimmedName;
+                    }
+                } else {
+                    alert(t('err_rename_folder') + error.message);
+                }
+            }
+        });
+    });
 
     // Delete Folder clicks
     const deleteBtns = folderList.querySelectorAll('.delete-folder-btn');

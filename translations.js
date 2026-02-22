@@ -107,7 +107,9 @@ window.translations = {
         msg_recipe_saved: "Rezept erfolgreich gespeichert!",
         msg_profile_saved: "Profil aktualisiert!",
         msg_password_saved: "Passwort erfolgreich geändert!",
-        msg_register_success: "Registrierung erfolgreich! Je nach deinen Supabase-Einstellungen musst du evtl. noch deine E-Mail bestätigen. Falls Auto-Confirm an ist, bist du jetzt eingeloggt!"
+        msg_register_success: "Registrierung erfolgreich! Je nach deinen Supabase-Einstellungen musst du evtl. noch deine E-Mail bestätigen. Falls Auto-Confirm an ist, bist du jetzt eingeloggt!",
+        prompt_rename_folder: "Neuer Name für den Ordner:",
+        err_rename_folder: "Fehler beim Umbenennen des Ordners: "
     },
     ua: {
         // Sidebar & Navigation
@@ -217,6 +219,8 @@ window.translations = {
         msg_recipe_saved: "Рецепт успішно збережено!",
         msg_profile_saved: "Профіль оновлено!",
         msg_password_saved: "Пароль успішно змінено!",
-        msg_register_success: "Реєстрація успішна! Залежно від налаштувань Supabase, можливо, вам доведеться підтвердити електронну пошту. Якщо увімкнено Auto-Confirm, ви вже увійшли!"
+        msg_register_success: "Реєстрація успішна! Залежно від налаштувань Supabase, можливо, вам доведеться підтвердити електронну пошту. Якщо увімкнено Auto-Confirm, ви вже увійшли!",
+        prompt_rename_folder: "Нова назва для папки:",
+        err_rename_folder: "Помилка при перейменуванні папки: "
     }
 };
