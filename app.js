@@ -1613,9 +1613,11 @@ function setupEventListeners() {
         currentViewRecipeId = null;
     });
 
-    // Edit Recipe
-    editRecipeBtn.addEventListener('click', () => {
-        if (!currentViewRecipeId) return;
+    // Edit Recipe (Delegated)
+    viewModal.addEventListener('click', (e) => {
+        const btn = e.target.closest('#editRecipeBtn');
+        if (!btn || !currentViewRecipeId) return;
+
         const recipe = recipes.find(r => r.id === currentViewRecipeId);
         if (!recipe) return;
 
@@ -1856,12 +1858,15 @@ function setupEventListeners() {
         }
     });
 
-    // Delete Recipe
-    deleteRecipeBtn.addEventListener('click', async () => {
-        if (currentViewRecipeId && confirm('Möchtest du dieses Rezept wirklich löschen?')) {
-            const deleteBtn = document.getElementById('deleteRecipeBtn');
-            deleteBtn.disabled = true;
-            deleteBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Löschen...';
+    // Delete Recipe (Delegated)
+    viewModal.addEventListener('click', async (e) => {
+        const btn = e.target.closest('#deleteRecipeBtn');
+        if (!btn || !currentViewRecipeId) return;
+
+        if (confirm('Möchtest du dieses Rezept wirklich löschen?')) {
+            btn.disabled = true;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Löschen...';
 
             try {
                 // Recipe info to delete associated image
@@ -1890,8 +1895,8 @@ function setupEventListeners() {
                 alert(t('err_delete_recipe') || 'Fehler beim Löschen des Rezepts.');
                 console.error(error);
             } finally {
-                deleteBtn.disabled = false;
-                deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Löschen';
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
             }
         }
     });
@@ -2031,6 +2036,10 @@ function openViewModal(recipe) {
             <div class="recipe-detail-meta">
                 <span><i class="fa-regular fa-calendar"></i> ${new Date(recipe.createdAt).toLocaleDateString(currentLang === 'ua' ? 'uk-UA' : 'de-DE')}</span>
                 <div class="recipe-tags-container" style="margin:0;">${viewTagsHtml}</div>
+            </div>
+            <div class="recipe-view-actions">
+                <button class="primary-btn" id="editRecipeBtn"><i class="fa-solid fa-pen"></i> <span data-i18n="edit_recipe">${t('edit_recipe')}</span></button>
+                <button class="danger-btn" id="deleteRecipeBtn"><i class="fa-solid fa-trash"></i> <span data-i18n="delete_recipe">${t('delete_recipe')}</span></button>
             </div>
         </div>
         <div class="recipe-detail-body">
