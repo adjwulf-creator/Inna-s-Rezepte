@@ -2135,8 +2135,7 @@ select:focus {
 
     .mobile-dropdown-content .folder-list {
         margin-right: 0;
-        padding: 1.5rem;
-        padding-bottom: 100px;
+        padding: 0.5rem 1.5rem 100px 1.5rem;
         padding-bottom: calc(2rem + env(safe-area-inset-bottom) + 60px);
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
