@@ -565,11 +565,6 @@ button {
 }
 
 /* Drag and Drop Visual Feedback */
-.folder-item.dragging {
-    opacity: 0.5;
-    background: var(--color-border);
-}
-
 .folder-item.drag-over {
     border-top: 2px solid var(--color-primary);
 }

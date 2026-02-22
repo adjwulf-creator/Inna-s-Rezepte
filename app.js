@@ -1082,7 +1082,7 @@ function setupFolderItemListeners() {
             touchLongPressTimer = setTimeout(() => {
                 touchDragging = true;
                 draggedFolderItem = item;
-                item.classList.add('dragging');
+                item.classList.add('dragging-touch');
 
                 if (navigator.vibrate) navigator.vibrate(50);
             }, 100);
@@ -1153,7 +1153,7 @@ function setupFolderItemListeners() {
             if (!touchDragging || draggedFolderItem !== item) return;
 
             touchDragging = false;
-            item.classList.remove('dragging');
+            item.classList.remove('dragging-touch');
             draggedFolderItem = null;
 
             // Save new order using centralized function
@@ -1164,7 +1164,7 @@ function setupFolderItemListeners() {
             clearTimeout(touchLongPressTimer);
             stopAutoScroll();
             touchDragging = false;
-            item.classList.remove('dragging');
+            item.classList.remove('dragging-touch');
             draggedFolderItem = null;
         }, { passive: true });
     });
