@@ -467,6 +467,12 @@ button {
     background: var(--color-bg);
 }
 
+.folder-item.dragging {
+    opacity: 0.4;
+    background: var(--color-bg-light);
+    border: 1px dashed var(--color-primary);
+}
+
 /* Alternate wiggle for adjacent items to look more organic */
 .folder-item.wiggling:nth-child(even) {
     animation-direction: reverse;

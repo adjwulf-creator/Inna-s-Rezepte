@@ -708,7 +708,14 @@ function renderFolders() {
             li.className = `folder-item sortable-folder ${currentFolderId === folder.id ? 'active' : ''}`;
             li.dataset.folderId = folder.id;
             if (isFolderEditMode) {
-                li.setAttribute('draggable', 'true');
+                // Only enable native draggable on non-mobile to prevent interference with touch reordering
+                if (window.innerWidth > 768) {
+                    li.setAttribute('draggable', 'true');
+                } else {
+                    li.removeAttribute('draggable');
+                }
+                // Apply wiggle if we are in wiggle mode
+                if (isFolderWiggling) li.classList.add('wiggling');
             }
 
             li.innerHTML = `
@@ -1018,7 +1025,7 @@ function setupFolderItemListeners() {
             const touch = e.touches[0];
             touchInitialY = touch.pageY;
 
-            // Start a long-press timer (500ms for iOS feel)
+            // Start a long-press timer (shortened for snapier feel)
             touchLongPressTimer = setTimeout(() => {
                 isFolderWiggling = true;
                 // Make all folders wiggle
@@ -1031,7 +1038,7 @@ function setupFolderItemListeners() {
 
                 // Haptic feedback
                 if (navigator.vibrate) navigator.vibrate(50);
-            }, 500);
+            }, 400);
         }, { passive: true });
 
         item.addEventListener('touchmove', (e) => {
@@ -1042,8 +1049,8 @@ function setupFolderItemListeners() {
 
             const touch = e.touches[0];
 
-            // If we move too much before the long press trigger, cancel it
-            if (!isFolderWiggling && Math.abs(touch.pageY - touchInitialY) > 10) {
+            // If we move too much before the long press trigger, cancel it (Increased tolerance)
+            if (!isFolderWiggling && Math.abs(touch.pageY - touchInitialY) > 25) {
                 clearTimeout(touchLongPressTimer);
                 return;
             }
