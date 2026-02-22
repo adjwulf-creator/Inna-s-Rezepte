@@ -806,6 +806,25 @@ async function saveFolderOrder() {
     }
 }
 
+function startAutoScroll() {
+    if (autoScrollRAF) return;
+    const scroll = () => {
+        if (autoScrollVelocity !== 0 && folderList) {
+            folderList.scrollTop += autoScrollVelocity;
+        }
+        autoScrollRAF = requestAnimationFrame(scroll);
+    };
+    autoScrollRAF = requestAnimationFrame(scroll);
+}
+
+function stopAutoScroll() {
+    if (autoScrollRAF) {
+        cancelAnimationFrame(autoScrollRAF);
+        autoScrollRAF = null;
+    }
+    autoScrollVelocity = 0;
+}
+
 function setupFolderItemListeners() {
     // 1. "All Recipes" Title Button Click (Direct listener since it's now in header)
     const allRecipesBtn = document.getElementById('allRecipesBtn');
