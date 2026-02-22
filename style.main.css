@@ -105,7 +105,7 @@ h4 {
     background: var(--color-surface);
     border-bottom: 2px solid var(--color-border);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem 2.2rem;
+    padding: 1.5rem;
     z-index: 95;
     max-height: calc(100vh - 110px);
     max-height: calc(100dvh - 110px);
@@ -125,6 +125,10 @@ h4 {
     overscroll-behavior: none;
     touch-action: none;
     gap: 0;
+}
+
+#mobileDropdownControls {
+    padding: 2.2rem;
 }
 
 .mobile-dropdown-content.hidden {
@@ -2141,7 +2145,7 @@ select:focus {
 
     .mobile-dropdown-content .folder-list {
         margin-right: 0;
-        padding: 0.5rem 2.2rem 100px 2.2rem;
+        padding: 0.5rem 1.5rem 100px 1.5rem;
         padding-bottom: calc(2rem + env(safe-area-inset-bottom) + 60px);
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
