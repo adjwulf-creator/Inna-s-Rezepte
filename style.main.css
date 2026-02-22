@@ -42,6 +42,10 @@
     padding: 0;
 }
 
+html {
+    background-color: var(--color-bg);
+}
+
 body {
     font-family: var(--font-body);
     background-color: var(--color-bg);
@@ -108,8 +112,9 @@ h4 {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     z-index: 95;
-    bottom: 0;
-    max-height: none;
+    bottom: auto;
+    max-height: 90vh;
+    /* Fallback for non-folder dropdowns */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overflow-x: hidden;

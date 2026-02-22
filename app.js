@@ -169,7 +169,12 @@ if (mobileFoldersBtn && mobileControlsBtn) {
         const header = document.querySelector('.app-header');
         if (header) {
             dropdown.style.top = header.offsetHeight + 'px';
-            dropdown.style.maxHeight = 'calc(100dvh - ' + header.offsetHeight + 'px)';
+            // Only cap height for controls, allow folders to bleed to the bottom (bottom:0 in CSS)
+            if (dropdown.id === 'mobileDropdownControls') {
+                dropdown.style.maxHeight = 'calc(100dvh - ' + header.offsetHeight + 'px)';
+            } else {
+                dropdown.style.maxHeight = 'none';
+            }
         }
     }
     mobileFoldersBtn.addEventListener('click', () => {
