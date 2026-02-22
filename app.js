@@ -681,14 +681,20 @@ function renderFolders() {
         }
     }
 
-    // Reset folder list except the first "All" item
-    folderList.innerHTML = `
-        <li class="folder-item ${currentFolderId === 'all' ? 'active' : ''}" data-folder-id="all">
-            <div class="folder-name-container">
-                <i class="fa-solid fa-layer-group"></i> <span data-i18n="all_recipes">${t('all_recipes')}</span>
+    // Update the separate "All Recipes" item
+    const allRecipesContainer = document.getElementById('allRecipesItemContainer');
+    if (allRecipesContainer) {
+        allRecipesContainer.innerHTML = `
+            <div class="folder-item ${currentFolderId === 'all' ? 'active' : ''}" data-folder-id="all">
+                <div class="folder-name-container">
+                    <i class="fa-regular fa-layer-group"></i> <span data-i18n="all_recipes">${t('all_recipes')}</span>
+                </div>
             </div>
-        </li>
-    `;
+        `;
+    }
+
+    // Reset folder list
+    folderList.innerHTML = '';
 
     // Reset Dropdown
     recipeFolderSelect.innerHTML = `<option value="">${t('no_folder')}</option>`;
@@ -760,8 +766,8 @@ function setupFolderItemListeners() {
         });
     }
 
-    // Sidebar Folder Clicks
-    const items = folderList.querySelectorAll('.folder-item');
+    // Folder Clicks (includes "All Recipes" and Sidebar items)
+    const items = document.querySelectorAll('.sidebar .folder-item');
     items.forEach(item => {
         item.addEventListener('click', (e) => {
             // Ignore logic if we are just editing/sorting folders
