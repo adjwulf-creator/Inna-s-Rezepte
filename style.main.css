@@ -1466,7 +1466,9 @@ select:focus {
 
 .recipe-detail-meta {
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
     color: var(--color-text-light);
     font-size: 0.9rem;
     margin-bottom: 1rem;

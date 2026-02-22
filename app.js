@@ -1826,8 +1826,8 @@ function openViewModal(recipe) {
             ${galleryHtml}
             <h2 class="recipe-detail-title">${recipe.title}</h2>
             <div class="recipe-detail-meta">
-                <div class="recipe-tags-container" style="margin:0;">${viewTagsHtml}</div>
                 <span><i class="fa-regular fa-calendar"></i> ${new Date(recipe.createdAt).toLocaleDateString(currentLang === 'ua' ? 'uk-UA' : 'de-DE')}</span>
+                <div class="recipe-tags-container" style="margin:0;">${viewTagsHtml}</div>
             </div>
         </div>
         <div class="recipe-detail-body">
