@@ -67,6 +67,13 @@ body.mobile-dropdown-active {
     width: 100%;
 }
 
+/* Interaction Lock: Prevent background clicks when modal is open */
+body.modal-active .app-header,
+body.modal-active .app-main {
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
 h1,
 h2,
 h3,
