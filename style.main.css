@@ -322,9 +322,18 @@ button {
 .sidebar-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     margin-bottom: 0.8rem;
     padding-bottom: 0;
+}
+
+.sidebar-label {
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+    font-style: italic;
+    font-family: var(--font-body);
+    opacity: 0.8;
+    margin-left: 0.2rem;
 }
 
 .sidebar-title-btn {

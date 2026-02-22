@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Inna´s Rezepte</title>
-    <link rel="stylesheet" href="style.main.css?v=77">
+    <link rel="stylesheet" href="style.main.css?v=78">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -62,9 +62,12 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-sticky-section">
                 <div class="sidebar-header">
-                    <button id="allRecipesBtn" class="sidebar-title-btn" data-i18n="all_recipes">
-                        <i class="fa-solid fa-layer-group"></i> Alle Rezepte
-                    </button>
+                    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 0.3rem;">
+                        <div class="sidebar-label" data-i18n="folders_title">Meine Ordner</div>
+                        <button id="allRecipesBtn" class="sidebar-title-btn" data-i18n="all_recipes">
+                            <i class="fa-solid fa-layer-group"></i> Alle Rezepte
+                        </button>
+                    </div>
                     <div style="display: flex; gap: 0.5rem;">
                         <button id="editFoldersBtn" class="edit-folder-btn" data-i18n-title="edit_folders"
                             title="Ordner bearbeiten">
