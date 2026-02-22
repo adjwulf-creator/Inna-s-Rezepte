@@ -970,6 +970,7 @@ function setupFolderItemListeners() {
             item.classList.remove('dragging');
             sortableItems.forEach(dropItem => dropItem.classList.remove('drag-over'));
             draggedFolderItem = null;
+            stopAutoScroll();
         });
 
         item.addEventListener('dragover', (e) => {
@@ -986,6 +987,25 @@ function setupFolderItemListeners() {
             if (!item.classList.contains('sortable-folder')) return;
             e.dataTransfer.dropEffect = 'move';
             item.classList.add('drag-over');
+
+            // Desktop Auto-scroll Logic
+            const scrollContainer = folderList;
+            if (scrollContainer) {
+                const rect = scrollContainer.getBoundingClientRect();
+                const edgeThreshold = 60;
+                const distFromTop = e.clientY - rect.top;
+                const distFromBottom = rect.bottom - e.clientY;
+
+                if (distFromTop < edgeThreshold) {
+                    autoScrollVelocity = -Math.max(5, (1 - distFromTop / edgeThreshold) * 20);
+                    if (!autoScrollRAF) startAutoScroll();
+                } else if (distFromBottom < edgeThreshold) {
+                    autoScrollVelocity = Math.max(5, (1 - distFromBottom / edgeThreshold) * 20);
+                    if (!autoScrollRAF) startAutoScroll();
+                } else {
+                    stopAutoScroll();
+                }
+            }
         });
 
         item.addEventListener('dragleave', () => {
@@ -997,6 +1017,7 @@ function setupFolderItemListeners() {
             e.preventDefault();
             item.classList.remove('drag-over');
             item.classList.remove('recipe-drag-over');
+            stopAutoScroll();
 
             // Handling Recipe Drop onto Folder
             if (draggedRecipeCard) {
