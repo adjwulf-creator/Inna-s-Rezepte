@@ -379,6 +379,16 @@ async function loadRecipes() {
     }
 
     recipes = data;
+
+    // DIAGNOSTIC: Check if column exists in results
+    if (recipes.length > 0) {
+        if (!('checked_ingredients' in recipes[0])) {
+            console.error("DIAGNOSTIC: The 'checked_ingredients' column is NOT present in the recipes data from Supabase. Please ensure you ran the SQL script.");
+        } else {
+            console.log("DIAGNOSTIC: 'checked_ingredients' column found in database results.");
+        }
+    }
+
     renderRecipes();
 }
 
@@ -2033,7 +2043,6 @@ function openViewModal(recipe) {
     let saveTimeout = null;
     const checkboxes = viewRecipeDetails.querySelectorAll('.ingredient-checkbox');
     checkboxes.forEach(cb => {
-        // Use both change and input to cover all mobile behaviors
         const handleChange = () => {
             const label = cb.closest('.ingredient-checkbox-label');
             if (label) {
@@ -2045,27 +2054,38 @@ function openViewModal(recipe) {
                 .filter(box => box.checked)
                 .map(box => parseInt(box.dataset.index));
 
-            // 1. Update local memory immediately
+            // 1. Update local memory immediately (both the passed object and the global array item)
             recipe.checked_ingredients = currentChecked;
+            const globalRecipe = recipes.find(r => r.id === recipe.id);
+            if (globalRecipe) globalRecipe.checked_ingredients = currentChecked;
 
             // 2. Debounced save to DB
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(async () => {
                 try {
+                    console.log(`Attempting to sync ingredients for recipe ${recipe.id}:`, currentChecked);
                     const { error } = await sbClient
                         .from('recipes')
                         .update({ checked_ingredients: currentChecked })
                         .eq('id', recipe.id);
-                    if (error) throw error;
-                    console.log("Ingredient status synced to DB for recipe:", recipe.id);
+
+                    if (error) {
+                        console.error("Supabase Update Error:", error);
+                        // Show a helpful alert for the user if it's a schema issue
+                        if (error.code === 'PGRST204' || error.message.includes('column')) {
+                            console.error("DIAGNOSTIC: The column 'checked_ingredients' seems to be missing in your Supabase 'recipes' table.");
+                        }
+                        throw error;
+                    }
+                    console.log("Ingredient status synced to DB successfully");
                 } catch (err) {
-                    console.error("Error syncing ingredients to DB:", err);
+                    console.error("Detailed Sync Error:", err);
                 }
-            }, 300); // Slightly faster debounce
+            }, 500);
         };
 
         cb.addEventListener('change', handleChange);
-        cb.addEventListener('input', handleChange); // Extra safety for Safari mobile
+        cb.addEventListener('input', handleChange);
     });
 
     // Reset scroll position
