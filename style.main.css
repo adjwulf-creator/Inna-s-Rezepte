@@ -125,9 +125,8 @@ h4 {
 }
 
 #mobileDropdownFolders {
-    height: calc(100vh - 110px);
-    height: calc(100svh - 110px);
-    height: auto;
+    height: auto !important;
+    bottom: 0 !important;
     flex: 1;
     overflow: hidden;
     /* Lock parent to allow inner scroll */
