@@ -127,9 +127,10 @@ h4 {
 #mobileDropdownFolders {
     height: calc(100vh - 110px);
     height: calc(100svh - 110px);
-    /* Fallback to small viewport height for safety, but bottom:0 handles the bleed */
     height: auto;
     flex: 1;
+    overflow: hidden;
+    /* Lock parent to allow inner scroll */
     overscroll-behavior: none;
     gap: 0;
 }
