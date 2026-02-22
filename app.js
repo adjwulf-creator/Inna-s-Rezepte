@@ -1072,8 +1072,10 @@ function renderRecipes() {
                     ${imageHtml}
                 </div>
                 <div class="card-content">
-                    <h3>${recipe.title}</h3>
-                    ${tagsHtml}
+                    <div class="card-header">
+                        <h3>${recipe.title}</h3>
+                        ${tagsHtml}
+                    </div>
                     <p class="recipe-description">${recipe.ingredients}</p>
                 </div>
             `;
