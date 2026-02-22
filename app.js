@@ -1964,11 +1964,13 @@ function openViewModal(recipe) {
             .split('\n')
             .filter(i => i.trim() !== '')
             .map((i, index) => {
-                const isChecked = savedCheckedIndices.includes(index) ? 'checked' : '';
+                const isChecked = savedCheckedIndices.includes(index);
+                const checkedAttr = isChecked ? 'checked' : '';
+                const checkedClass = isChecked ? 'is-checked' : '';
                 return `
                 <li class="ingredient-item">
-                    <label class="ingredient-checkbox-label">
-                        <input type="checkbox" class="ingredient-checkbox" data-index="${index}" ${isChecked}>
+                    <label class="ingredient-checkbox-label ${checkedClass}">
+                        <input type="checkbox" class="ingredient-checkbox" data-index="${index}" ${checkedAttr}>
                         <span class="ingredient-text">${i.trim()}</span>
                     </label>
                 </li>
@@ -2021,6 +2023,12 @@ function openViewModal(recipe) {
     const checkboxes = viewRecipeDetails.querySelectorAll('.ingredient-checkbox');
     checkboxes.forEach(cb => {
         cb.addEventListener('change', () => {
+            const label = cb.closest('.ingredient-checkbox-label');
+            if (label) {
+                if (cb.checked) label.classList.add('is-checked');
+                else label.classList.remove('is-checked');
+            }
+
             const currentChecked = Array.from(checkboxes)
                 .filter(box => box.checked)
                 .map(box => parseInt(box.dataset.index));

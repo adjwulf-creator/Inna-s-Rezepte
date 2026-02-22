@@ -1682,6 +1682,8 @@ select:focus {
     cursor: pointer;
     line-height: 1.4;
     transition: opacity 0.2s ease;
+    padding: 2px 0;
+    /* Better touch target */
 }
 
 .ingredient-checkbox {
@@ -1693,11 +1695,11 @@ select:focus {
     cursor: pointer;
 }
 
-.ingredient-checkbox-label:has(input:checked) {
+.ingredient-checkbox-label.is-checked {
     opacity: 0.6;
 }
 
-.ingredient-checkbox-label:has(input:checked) .ingredient-text {
+.ingredient-checkbox-label.is-checked .ingredient-text {
     text-decoration: line-through;
 }
 
