@@ -112,6 +112,7 @@ h4 {
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -2125,5 +2126,10 @@ select:focus {
 
     .mobile-dropdown-content .sidebar-label {
         display: none;
+    }
+
+    .mobile-dropdown-content .folder-list {
+        margin-right: 0;
+        padding-right: 0;
     }
 }
