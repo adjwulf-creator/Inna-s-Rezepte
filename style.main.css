@@ -333,7 +333,7 @@ button {
     padding: 1.25rem 1rem;
     /* Unified horizontal padding with folder list */
     border-radius: var(--radius-md) var(--radius-md) 0 0;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: none;
 }
 
 .sidebar-header {
@@ -692,9 +692,10 @@ button {
 }
 
 #categoryFilterHeader {
-    border: none;
-    background: transparent;
-    padding-left: 0;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding-left: 0 !important;
 }
 
 .multi-select-dropdown {
