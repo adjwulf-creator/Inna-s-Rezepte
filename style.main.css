@@ -440,6 +440,10 @@ button {
     font-weight: 500;
     position: relative;
     user-select: none;
+    -webkit-user-select: none;
+    /* iOS Safari */
+    -webkit-touch-callout: none;
+    /* iOS Safari magnifying glass */
 }
 
 /* Wiggle Animation for iOS-style reordering */
