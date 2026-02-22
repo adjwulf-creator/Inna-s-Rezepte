@@ -1960,12 +1960,19 @@ function openViewModal(recipe) {
         const ingredientsItems = recipe.ingredients
             .split('\n')
             .filter(i => i.trim() !== '')
-            .map(i => `<li>${i}</li>`)
+            .map((i, index) => `
+                <li class="ingredient-item">
+                    <label class="ingredient-checkbox-label">
+                        <input type="checkbox" class="ingredient-checkbox">
+                        <span class="ingredient-text">${i.trim()}</span>
+                    </label>
+                </li>
+            `)
             .join('');
         ingredientsHtml = `
             <div class="ingredients-list">
                 <h4>${t('ingredients')}</h4>
-                <ul>
+                <ul class="no-bullets">
                     ${ingredientsItems}
                 </ul>
             </div>

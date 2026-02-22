@@ -1666,6 +1666,41 @@ select:focus {
     line-height: 1.8;
 }
 
+.ingredients-list ul.no-bullets {
+    list-style: none;
+    padding-left: 0;
+}
+
+.ingredient-item {
+    margin-bottom: 0.5rem;
+}
+
+.ingredient-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    line-height: 1.4;
+    transition: opacity 0.2s ease;
+}
+
+.ingredient-checkbox {
+    margin-top: 0.2rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+.ingredient-checkbox-label:has(input:checked) {
+    opacity: 0.6;
+}
+
+.ingredient-checkbox-label:has(input:checked) .ingredient-text {
+    text-decoration: line-through;
+}
+
 .instructions-section p {
     white-space: pre-wrap;
 }
