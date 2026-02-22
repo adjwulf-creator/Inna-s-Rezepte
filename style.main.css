@@ -438,6 +438,44 @@ button {
     transition: var(--transition);
     color: var(--color-text-light);
     font-weight: 500;
+    position: relative;
+    user-select: none;
+}
+
+/* Wiggle Animation for iOS-style reordering */
+@keyframes wiggle {
+    0% {
+        transform: rotate(-1deg);
+    }
+
+    50% {
+        transform: rotate(1.5deg);
+    }
+
+    100% {
+        transform: rotate(-1deg);
+    }
+}
+
+.folder-item.wiggling {
+    animation: wiggle 0.3s infinite ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: var(--color-bg);
+}
+
+/* Alternate wiggle for adjacent items to look more organic */
+.folder-item.wiggling:nth-child(even) {
+    animation-direction: reverse;
+}
+
+.folder-item.dragging-touch {
+    opacity: 0.8;
+    z-index: 1000;
+    position: fixed;
+    pointer-events: none;
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    background: var(--color-surface);
 }
 
 .folder-name-container {

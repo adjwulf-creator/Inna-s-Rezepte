@@ -110,6 +110,8 @@ const deleteRecipeBtn = document.getElementById('deleteRecipeBtn');
 let currentViewRecipeId = null;
 let editingRecipeId = null;
 let isFolderEditMode = false;
+let isFolderWiggling = false; // Track wiggle state
+let draggedFolderItem = null;
 let currentRecipeImages = []; // Array of { url: string, file: File, isDefault: boolean }
 
 // Settings DOM Elements
@@ -678,6 +680,8 @@ function renderFolders() {
         } else {
             editFoldersBtn.classList.remove('active');
             folderList.classList.remove('folder-edit-mode');
+            // Stop wiggling when leaving edit mode
+            isFolderWiggling = false;
         }
     }
 
@@ -750,6 +754,37 @@ function renderFolders() {
     }
 
     setupFolderItemListeners();
+}
+
+async function saveFolderOrder() {
+    if (!currentUser) return;
+
+    // Get current order from DOM
+    const sortedIds = Array.from(folderList.querySelectorAll('.folder-item'))
+        .map(item => item.dataset.folderId);
+
+    // Update locally
+    folders.sort((a, b) => {
+        return sortedIds.indexOf(String(a.id)) - sortedIds.indexOf(String(b.id));
+    });
+
+    // Sync with Supabase
+    try {
+        const updates = sortedIds.map((id, index) => ({
+            id: id,
+            order_index: index,
+            user_id: currentUser.id
+        }));
+
+        const { error } = await sbClient
+            .from('folders')
+            .upsert(updates);
+
+        if (error) throw error;
+        console.log("Folder order saved successfully");
+    } catch (err) {
+        console.error("Error saving folder order:", err);
+    }
 }
 
 function setupFolderItemListeners() {
@@ -971,47 +1006,60 @@ function setupFolderItemListeners() {
             }
         });
 
-        // --- Touch-based drag and drop for mobile ---
+        // --- Touch-based drag and drop for mobile (iOS Style Wiggle) ---
         let touchLongPressTimer = null;
         let touchDragging = false;
+        let touchInitialY = 0;
 
         item.addEventListener('touchstart', (e) => {
             if (!isFolderEditMode) return;
-            if (!item.classList.contains('sortable-folder')) return;
+            if (e.target.closest('.folder-actions')) return;
 
-            // Start a long-press timer (400ms)
+            const touch = e.touches[0];
+            touchInitialY = touch.pageY;
+
+            // Start a long-press timer (500ms for iOS feel)
             touchLongPressTimer = setTimeout(() => {
+                isFolderWiggling = true;
+                // Make all folders wiggle
+                const allFolders = folderList.querySelectorAll('.folder-item');
+                allFolders.forEach(f => f.classList.add('wiggling'));
+
                 touchDragging = true;
                 draggedFolderItem = item;
                 item.classList.add('dragging');
-                // Haptic feedback if available
-                if (navigator.vibrate) navigator.vibrate(30);
-            }, 400);
+
+                // Haptic feedback
+                if (navigator.vibrate) navigator.vibrate(50);
+            }, 500);
         }, { passive: true });
 
         item.addEventListener('touchmove', (e) => {
-            if (!touchDragging || draggedFolderItem !== item) {
-                // Cancel long-press if finger moves before timer fires
+            if (!isFolderEditMode) {
                 clearTimeout(touchLongPressTimer);
                 return;
             }
-            e.preventDefault();
 
             const touch = e.touches[0];
+
+            // If we move too much before the long press trigger, cancel it
+            if (!isFolderWiggling && Math.abs(touch.pageY - touchInitialY) > 10) {
+                clearTimeout(touchLongPressTimer);
+                return;
+            }
+
+            if (!touchDragging || draggedFolderItem !== item) return;
+
+            e.preventDefault(); // Prevent page scroll when dragging
+
             const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
             if (!targetEl) return;
             const targetItem = targetEl.closest('.sortable-folder');
 
-            // Clear all drag-over indicators
-            sortableItems.forEach(si => si.classList.remove('drag-over'));
-
             if (targetItem && targetItem !== item) {
-                // Show indicator on target
-                targetItem.classList.add('drag-over');
-
-                // Move the dragged element in the DOM
                 const bounding = targetItem.getBoundingClientRect();
                 const midpoint = bounding.y + (bounding.height / 2);
+
                 if (touch.clientY > midpoint) {
                     targetItem.after(item);
                 } else {
@@ -1019,16 +1067,14 @@ function setupFolderItemListeners() {
                 }
             }
 
-            // Auto-scroll the dropdown container if near edges
-            const scrollContainer = item.closest('.mobile-dropdown-content') || item.closest('.sidebar');
-            if (scrollContainer) {
-                const containerRect = scrollContainer.getBoundingClientRect();
-                const edgeThreshold = 40;
-                if (touch.clientY - containerRect.top < edgeThreshold) {
-                    scrollContainer.scrollTop -= 8;
-                } else if (containerRect.bottom - touch.clientY < edgeThreshold) {
-                    scrollContainer.scrollTop += 8;
-                }
+            // Auto-scroll logic
+            const scrollContainer = folderList;
+            const containerRect = scrollContainer.getBoundingClientRect();
+            const edgeThreshold = 60;
+            if (touch.clientY - containerRect.top < edgeThreshold) {
+                scrollContainer.scrollTop -= 10;
+            } else if (containerRect.bottom - touch.clientY < edgeThreshold) {
+                scrollContainer.scrollTop += 10;
             }
         }, { passive: false });
 
@@ -1038,10 +1084,9 @@ function setupFolderItemListeners() {
 
             touchDragging = false;
             item.classList.remove('dragging');
-            sortableItems.forEach(si => si.classList.remove('drag-over'));
             draggedFolderItem = null;
 
-            // Save new order
+            // Save new order to Supabase
             const currentItems = Array.from(folderList.querySelectorAll('.sortable-folder'));
             const orderUpdates = currentItems.map((li, index) => ({
                 id: li.dataset.folderId,
@@ -1052,10 +1097,16 @@ function setupFolderItemListeners() {
             try {
                 const { error } = await sbClient.from('folders').upsert(orderUpdates, { onConflict: 'id' });
                 if (error) throw error;
-                await loadFolders();
+
+                // Update local 'folders' array to match new order
+                folders.sort((a, b) => {
+                    const idxA = orderUpdates.findIndex(u => u.id === a.id);
+                    const idxB = orderUpdates.findIndex(u => u.id === b.id);
+                    return idxA - idxB;
+                });
+
             } catch (err) {
                 console.error("Order save err:", err);
-                alert("Fehler beim Speichern der Reihenfolge.");
             }
         }, { passive: true });
 
@@ -1063,7 +1114,6 @@ function setupFolderItemListeners() {
             clearTimeout(touchLongPressTimer);
             touchDragging = false;
             item.classList.remove('dragging');
-            sortableItems.forEach(si => si.classList.remove('drag-over'));
             draggedFolderItem = null;
         }, { passive: true });
     });
