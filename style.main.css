@@ -691,6 +691,12 @@ button {
     border-color: var(--color-primary);
 }
 
+#categoryFilterHeader {
+    border: none;
+    background: transparent;
+    padding-left: 0;
+}
+
 .multi-select-dropdown {
     position: absolute;
     top: 100%;
