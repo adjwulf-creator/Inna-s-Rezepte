@@ -2100,7 +2100,7 @@ select:focus {
         background: var(--color-surface);
         z-index: 10;
         margin: 0;
-        padding: 1rem 1.5rem 0 1.5rem;
+        padding: 0.5rem 1.5rem 0 1.5rem;
         border-bottom: 1px solid var(--color-border);
     }
 
@@ -2121,5 +2121,9 @@ select:focus {
 
     .mobile-dropdown-content .sidebar-header>div:first-child {
         align-items: flex-start !important;
+    }
+
+    .mobile-dropdown-content .sidebar-label {
+        display: none;
     }
 }
