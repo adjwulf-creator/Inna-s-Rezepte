@@ -2101,14 +2101,15 @@ select:focus {
     }
 
     .mobile-dropdown-content .sidebar-header {
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: space-between;
         align-items: center;
-        gap: 0.8rem;
+        gap: 0.5rem;
         margin-bottom: 0;
-        padding-bottom: 0.5rem;
+        padding-bottom: 0.8rem;
     }
 
     .mobile-dropdown-content .sidebar-header>div:first-child {
-        align-items: center !important;
+        align-items: flex-start !important;
     }
 }
