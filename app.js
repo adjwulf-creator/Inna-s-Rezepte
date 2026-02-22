@@ -112,6 +112,8 @@ let editingRecipeId = null;
 let isFolderEditMode = false;
 let isFolderWiggling = false; // Track wiggle state
 let draggedFolderItem = null;
+let autoScrollRAF = null;
+let autoScrollVelocity = 0;
 let currentRecipeImages = []; // Array of { url: string, file: File, isDefault: boolean }
 
 // Settings DOM Elements
@@ -1074,14 +1076,25 @@ function setupFolderItemListeners() {
                 }
             }
 
-            // Auto-scroll logic
+            // Auto-scroll logic (Refined for continuous movement)
             const scrollContainer = folderList;
             const containerRect = scrollContainer.getBoundingClientRect();
-            const edgeThreshold = 60;
-            if (touch.clientY - containerRect.top < edgeThreshold) {
-                scrollContainer.scrollTop -= 10;
-            } else if (containerRect.bottom - touch.clientY < edgeThreshold) {
-                scrollContainer.scrollTop += 10;
+            const edgeThreshold = 80; // Larger threshold for easier trigger
+
+            const distFromTop = touch.clientY - containerRect.top;
+            const distFromBottom = containerRect.bottom - touch.clientY;
+
+            if (distFromTop < edgeThreshold) {
+                // Near top edge
+                autoScrollVelocity = -Math.max(2, (1 - distFromTop / edgeThreshold) * 15);
+                if (!autoScrollRAF) startAutoScroll();
+            } else if (distFromBottom < edgeThreshold) {
+                // Near bottom edge
+                autoScrollVelocity = Math.max(2, (1 - distFromBottom / edgeThreshold) * 15);
+                if (!autoScrollRAF) startAutoScroll();
+            } else {
+                // Not near edge
+                stopAutoScroll();
             }
         }, { passive: false });
 
@@ -1091,6 +1104,7 @@ function setupFolderItemListeners() {
 
         item.addEventListener('touchend', async () => {
             clearTimeout(touchLongPressTimer);
+            stopAutoScroll();
             if (!touchDragging || draggedFolderItem !== item) return;
 
             touchDragging = false;
@@ -1103,6 +1117,7 @@ function setupFolderItemListeners() {
 
         item.addEventListener('touchcancel', () => {
             clearTimeout(touchLongPressTimer);
+            stopAutoScroll();
             touchDragging = false;
             item.classList.remove('dragging');
             draggedFolderItem = null;
