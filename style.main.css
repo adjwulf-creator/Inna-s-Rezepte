@@ -490,7 +490,6 @@ button {
     z-index: 1000;
     position: fixed;
     pointer-events: none;
-    transform: scale(1.05);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     background: var(--color-surface);
 }

@@ -1067,7 +1067,7 @@ function setupFolderItemListeners() {
             if (!isFolderEditMode || !draggedFolderItem) return;
 
             // Save new order using centralized function
-            saveFolderOrder();
+            await saveFolderOrder();
         });
 
         // --- Touch-based drag and drop for mobile (iOS Style Wiggle) ---
@@ -1088,6 +1088,13 @@ function setupFolderItemListeners() {
             touchLongPressTimer = setTimeout(() => {
                 touchDragging = true;
                 draggedFolderItem = item;
+
+                // Capture and lock dimensions to prevent shrinking when position: fixed
+                const rect = item.getBoundingClientRect();
+                item.style.width = rect.width + 'px';
+                item.style.height = rect.height + 'px';
+
+                item.classList.remove('wiggling'); // Don't wiggle while dragging
                 item.classList.add('dragging-touch');
 
                 if (navigator.vibrate) navigator.vibrate(50);
@@ -1159,18 +1166,30 @@ function setupFolderItemListeners() {
             if (!touchDragging || draggedFolderItem !== item) return;
 
             touchDragging = false;
+
+            // Restore item state
+            item.style.width = '';
+            item.style.height = '';
             item.classList.remove('dragging-touch');
+            if (isFolderWiggling) item.classList.add('wiggling');
+
             draggedFolderItem = null;
 
             // Save new order using centralized function
-            saveFolderOrder();
+            await saveFolderOrder();
         }, { passive: true });
 
         item.addEventListener('touchcancel', () => {
             clearTimeout(touchLongPressTimer);
             stopAutoScroll();
             touchDragging = false;
+
+            // Restore item state
+            item.style.width = '';
+            item.style.height = '';
             item.classList.remove('dragging-touch');
+            if (isFolderWiggling) item.classList.add('wiggling');
+
             draggedFolderItem = null;
         }, { passive: true });
     });
