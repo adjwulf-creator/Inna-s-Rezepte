@@ -49,6 +49,8 @@ body {
     line-height: 1.6;
     background-image: radial-gradient(#e6dfd1 1px, transparent 1px);
     background-size: 20px 20px;
+    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 h1,
@@ -2070,7 +2072,7 @@ select:focus {
 
     #addRecipeBtn {
         position: fixed;
-        bottom: 2rem;
+        bottom: calc(2rem + env(safe-area-inset-bottom));
         right: 2rem;
         width: 60px;
         height: 60px;
@@ -2167,6 +2169,7 @@ select:focus {
         border-radius: 0;
         border: none;
         padding: 1.5rem;
+        padding-bottom: calc(2rem + env(safe-area-inset-bottom));
     }
 
     .view-modal-content {
@@ -2179,6 +2182,7 @@ select:focus {
         border-radius: 0;
         border: none;
         padding: 1.5rem;
+        padding-bottom: calc(2rem + env(safe-area-inset-bottom));
     }
 
     .recipe-modal-content {
@@ -2191,6 +2195,7 @@ select:focus {
         border-radius: 0;
         border: none;
         padding: 1.5rem;
+        padding-bottom: calc(2rem + env(safe-area-inset-bottom));
     }
 
     /* Mobile Dropdown & Modal Active Overlay */
