@@ -476,8 +476,6 @@ button {
     opacity: 0.4;
     background: var(--color-bg-light);
     border: 1px dashed var(--color-primary);
-    pointer-events: none;
-    /* Essential for elementFromPoint to work on items underneath */
     z-index: 100;
 }
 
