@@ -681,16 +681,14 @@ function renderFolders() {
         }
     }
 
-    // Update the separate "All Recipes" item
-    const allRecipesContainer = document.getElementById('allRecipesItemContainer');
-    if (allRecipesContainer) {
-        allRecipesContainer.innerHTML = `
-            <div class="folder-item ${currentFolderId === 'all' ? 'active' : ''}" data-folder-id="all">
-                <div class="folder-name-container">
-                    <i class="fa-solid fa-layer-group"></i> <span data-i18n="all_recipes">${t('all_recipes')}</span>
-                </div>
-            </div>
-        `;
+    // Update the "All Recipes" header button state
+    const allRecipesBtn = document.getElementById('allRecipesBtn');
+    if (allRecipesBtn) {
+        if (currentFolderId === 'all') {
+            allRecipesBtn.classList.add('active');
+        } else {
+            allRecipesBtn.classList.remove('active');
+        }
     }
 
     // Reset folder list

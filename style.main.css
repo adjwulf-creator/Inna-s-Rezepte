@@ -315,13 +315,9 @@ button {
     /* Offset sidebar padding, extra 0.1 to avoid gap */
     background: var(--color-surface);
     z-index: 10;
-    margin: 0 -1.5rem 1rem -1.5rem;
+    margin: 0 -1.5rem 0.5rem -1.5rem;
     padding: 1.5rem 1.5rem 0.5rem 1.5rem;
     border-bottom: 1px dashed var(--color-border);
-}
-
-#allRecipesItemContainer {
-    flex-shrink: 0;
 }
 
 .content-area {
@@ -364,6 +360,33 @@ button {
     background: var(--color-primary);
     color: white;
     transform: scale(1.05);
+}
+
+.all-recipes-btn {
+    background: var(--color-bg);
+    border: none;
+    color: var(--color-primary);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.all-recipes-btn:hover {
+    background: var(--color-primary);
+    color: white;
+    transform: scale(1.05);
+}
+
+.all-recipes-btn.active {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: 0 0 0 2px rgba(122, 107, 168, 0.3);
 }
 
 .folder-list {
@@ -486,10 +509,7 @@ button {
     color: white;
 }
 
-.folder-item[data-folder-id="all"] {
-    margin-bottom: 0;
-    border-radius: var(--radius-sm);
-}
+/* data-folder-id="all" is now in header, standard styles applier via class */
 
 .folder-item[data-folder-id="all"].active {
     background: var(--color-primary);
