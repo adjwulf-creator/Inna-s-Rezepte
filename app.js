@@ -789,11 +789,17 @@ async function saveFolderOrder() {
 
     // Sync with Supabase
     try {
-        const updates = sortedIds.map((id, index) => ({
-            id: id,
-            order_index: index,
-            user_id: currentUser.id
-        }));
+        const updates = sortedIds.map((id, index) => {
+            // Update local state property
+            const folder = folders.find(f => String(f.id) === String(id));
+            if (folder) folder.order_index = index;
+
+            return {
+                id: id,
+                order_index: index,
+                user_id: currentUser.id
+            };
+        });
 
         const { error } = await sbClient
             .from('folders')
