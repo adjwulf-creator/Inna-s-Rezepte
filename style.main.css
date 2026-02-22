@@ -446,6 +446,11 @@ button {
     /* iOS Safari magnifying glass */
 }
 
+.folder-edit-mode .folder-item {
+    touch-action: none;
+    /* Critical for iOS: prevent native scroll from taking over during drag */
+}
+
 /* Wiggle Animation for iOS-style reordering */
 @keyframes wiggle {
     0% {
@@ -471,6 +476,9 @@ button {
     opacity: 0.4;
     background: var(--color-bg-light);
     border: 1px dashed var(--color-primary);
+    pointer-events: none;
+    /* Essential for elementFromPoint to work on items underneath */
+    z-index: 100;
 }
 
 /* Alternate wiggle for adjacent items to look more organic */
