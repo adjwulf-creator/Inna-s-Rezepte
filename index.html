@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Inna´s Rezepte</title>
-    <link rel="stylesheet" href="style.main.css?v=70">
+    <link rel="stylesheet" href="style.main.css?v=71">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -60,20 +60,23 @@
 
     <main class="app-main main-layout">
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2 data-i18n="folders_title">Meine Ordner</h2>
-                <div style="display: flex; gap: 0.5rem;">
-                    <button id="editFoldersBtn" class="edit-folder-btn" data-i18n-title="edit_folders"
-                        title="Ordner bearbeiten">
-                        <i class="fa-solid fa-pencil"></i>
-                    </button>
-                    <button id="addFolderBtn" class="add-folder-btn" data-i18n-title="new_folder" title="Neuer Ordner">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
+            <div class="sidebar-sticky-section">
+                <div class="sidebar-header">
+                    <h2 data-i18n="folders_title">Meine Ordner</h2>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button id="editFoldersBtn" class="edit-folder-btn" data-i18n-title="edit_folders"
+                            title="Ordner bearbeiten">
+                            <i class="fa-solid fa-pencil"></i>
+                        </button>
+                        <button id="addFolderBtn" class="add-folder-btn" data-i18n-title="new_folder"
+                            title="Neuer Ordner">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div id="allRecipesItemContainer">
-                <!-- Injected via JS -->
+                <div id="allRecipesItemContainer">
+                    <!-- Injected via JS -->
+                </div>
             </div>
             <ul id="folderList" class="folder-list">
                 <!-- Dynamische Ordner kommen hier rein -->

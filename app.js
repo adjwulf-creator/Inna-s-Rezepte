@@ -687,7 +687,7 @@ function renderFolders() {
         allRecipesContainer.innerHTML = `
             <div class="folder-item ${currentFolderId === 'all' ? 'active' : ''}" data-folder-id="all">
                 <div class="folder-name-container">
-                    <i class="fa-regular fa-layer-group"></i> <span data-i18n="all_recipes">${t('all_recipes')}</span>
+                    <i class="fa-solid fa-layer-group"></i> <span data-i18n="all_recipes">${t('all_recipes')}</span>
                 </div>
             </div>
         `;

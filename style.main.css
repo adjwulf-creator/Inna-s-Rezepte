@@ -306,6 +306,18 @@ button {
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
+    max-height: calc(100vh - 4rem);
+}
+
+.sidebar-sticky-section {
+    position: sticky;
+    top: -1.51rem;
+    /* Offset sidebar padding, extra 0.1 to avoid gap */
+    background: var(--color-surface);
+    z-index: 10;
+    margin: 0 -1.5rem 1rem -1.5rem;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    border-bottom: 1px dashed var(--color-border);
 }
 
 #allRecipesItemContainer {
@@ -475,7 +487,7 @@ button {
 }
 
 .folder-item[data-folder-id="all"] {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
     border-radius: var(--radius-sm);
 }
 
