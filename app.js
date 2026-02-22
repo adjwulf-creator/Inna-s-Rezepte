@@ -824,10 +824,14 @@ function setupFolderItemListeners() {
         // Clone and replace to prevent duplicate listeners
         const newBtn = editFoldersBtn.cloneNode(true);
         editFoldersBtn.parentNode.replaceChild(newBtn, editFoldersBtn);
-        newBtn.addEventListener('click', (e) => {
+        newBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
+            if (isFolderEditMode) {
+                // We are exiting edit mode: save order first
+                await saveFolderOrder();
+            }
             isFolderEditMode = !isFolderEditMode;
-            isFolderWiggling = isFolderEditMode; // Start/Stop wiggling immediately
+            isFolderWiggling = isFolderEditMode;
             renderFolders();
         });
     }
@@ -993,25 +997,8 @@ function setupFolderItemListeners() {
                 item.before(draggedFolderItem);
             }
 
-            // Save new order
-            const currentItems = Array.from(folderList.querySelectorAll('.sortable-folder'));
-            const orderUpdates = currentItems.map((li, index) => ({
-                id: li.dataset.folderId,
-                order_index: index,
-                user_id: currentUser.id
-            }));
-
-            try {
-                // Supabase doesn't have a single bulk update endpoint without an RPC,
-                // so we upsert with id array. Given 'id' is unique, upsert acts like an update.
-                const { error } = await sbClient.from('folders').upsert(orderUpdates, { onConflict: 'id' });
-                if (error) throw error;
-                // Reload folders to match new memory state
-                await loadFolders();
-            } catch (err) {
-                console.error("Order save err:", err);
-                alert("Fehler beim Speichern der Reihenfolge.");
-            }
+            // Save new order using centralized function
+            saveFolderOrder();
         });
 
         // --- Touch-based drag and drop for mobile (iOS Style Wiggle) ---
@@ -1094,28 +1081,8 @@ function setupFolderItemListeners() {
             item.classList.remove('dragging');
             draggedFolderItem = null;
 
-            // Save new order to Supabase
-            const currentItems = Array.from(folderList.querySelectorAll('.sortable-folder'));
-            const orderUpdates = currentItems.map((li, index) => ({
-                id: li.dataset.folderId,
-                order_index: index,
-                user_id: currentUser.id
-            }));
-
-            try {
-                const { error } = await sbClient.from('folders').upsert(orderUpdates, { onConflict: 'id' });
-                if (error) throw error;
-
-                // Update local 'folders' array to match new order
-                folders.sort((a, b) => {
-                    const idxA = orderUpdates.findIndex(u => u.id === a.id);
-                    const idxB = orderUpdates.findIndex(u => u.id === b.id);
-                    return idxA - idxB;
-                });
-
-            } catch (err) {
-                console.error("Order save err:", err);
-            }
+            // Save new order using centralized function
+            saveFolderOrder();
         }, { passive: true });
 
         item.addEventListener('touchcancel', () => {
