@@ -2166,4 +2166,8 @@ select:focus {
         flex-grow: 1;
         min-height: 0;
     }
+
+    .folder-list.folder-edit-mode .folder-item .folder-actions {
+        gap: 1rem;
+    }
 }
