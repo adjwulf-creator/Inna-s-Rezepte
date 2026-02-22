@@ -1928,14 +1928,23 @@ function setupEventListeners() {
 function openViewModal(recipe) {
     currentViewRecipeId = recipe.id;
 
+    // Persistence: Load checked state
+    const storageKey = `recipeChecked_${recipe.id}`;
+    let savedCheckedIndices = [];
+    try {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) savedCheckedIndices = JSON.parse(saved);
+    } catch (e) {
+        console.warn("Could not load checked ingredients", e);
+    }
+
     // Set up images for gallery and lightbox
     currentLightboxImages = recipe.images && recipe.images.length > 0
         ? recipe.images
         : (recipe.imageData ? [recipe.imageData] : []);
 
-    // The main image is either the first in the array or the explicit standard image
+    // ... (rest of image logic remains same)
     let initialMainImageUrl = recipe.imageData || (currentLightboxImages.length > 0 ? currentLightboxImages[0] : null);
-    // Find index of the main image for the lightbox
     currentLightboxIndex = currentLightboxImages.indexOf(initialMainImageUrl) >= 0
         ? currentLightboxImages.indexOf(initialMainImageUrl)
         : 0;
@@ -1960,14 +1969,17 @@ function openViewModal(recipe) {
         const ingredientsItems = recipe.ingredients
             .split('\n')
             .filter(i => i.trim() !== '')
-            .map((i, index) => `
+            .map((i, index) => {
+                const isChecked = savedCheckedIndices.includes(index) ? 'checked' : '';
+                return `
                 <li class="ingredient-item">
                     <label class="ingredient-checkbox-label">
-                        <input type="checkbox" class="ingredient-checkbox">
+                        <input type="checkbox" class="ingredient-checkbox" data-index="${index}" ${isChecked}>
                         <span class="ingredient-text">${i.trim()}</span>
                     </label>
                 </li>
-            `)
+            `;
+            })
             .join('');
         ingredientsHtml = `
             <div class="ingredients-list">
@@ -2009,6 +2021,17 @@ function openViewModal(recipe) {
             ${instructionsHtml}
         </div>
     `;
+
+    // Persistence: Add listeners to save state
+    const checkboxes = viewRecipeDetails.querySelectorAll('.ingredient-checkbox');
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+            const currentChecked = Array.from(checkboxes)
+                .filter(box => box.checked)
+                .map(box => parseInt(box.dataset.index));
+            localStorage.setItem(storageKey, JSON.stringify(currentChecked));
+        });
+    });
 
     // Reset scroll position
     const viewModalContent = viewModal.querySelector('.view-modal-content');
