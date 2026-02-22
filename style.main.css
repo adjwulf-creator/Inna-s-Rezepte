@@ -2109,6 +2109,10 @@ select:focus {
         opacity: 0.5;
     }
 
+    body.mobile-dropdown-active #addRecipeBtn {
+        display: none !important;
+    }
+
     .content-area {
         transition: filter 0.3s ease, opacity 0.3s ease;
     }
