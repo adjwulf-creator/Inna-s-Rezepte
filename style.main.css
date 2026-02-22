@@ -2169,6 +2169,13 @@ select:focus {
         padding: 0.5rem 0;
     }
 
+    /* Standardized large hit areas for close buttons on mobile */
+    .close-btn {
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 1.4rem !important;
+    }
+
     .settings-modal-content {
         width: 100%;
         height: 100%;

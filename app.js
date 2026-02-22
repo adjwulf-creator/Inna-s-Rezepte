@@ -1479,6 +1479,17 @@ function setupEventListeners() {
         settingsModal.classList.add('hidden');
     });
 
+    // Support instant pointer interaction for Safari/mobile
+    closeSettingsModalBtn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        settingsModal.classList.add('hidden');
+    });
+
+    // Click outside to close
+    settingsModal.addEventListener('pointerdown', (e) => {
+        if (e.target === settingsModal) settingsModal.classList.add('hidden');
+    });
+
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             // Remove active class from all
@@ -1569,9 +1580,14 @@ function setupEventListeners() {
     closeFolderModalBtn.addEventListener('click', closeFolderModal);
     cancelFolderModalBtn.addEventListener('click', closeFolderModal);
 
-    // Support instant touch for Safari/mobile
-    closeFolderModalBtn.addEventListener('touchstart', (e) => { e.preventDefault(); closeFolderModal(); }, { passive: false });
-    cancelFolderModalBtn.addEventListener('touchstart', (e) => { e.preventDefault(); closeFolderModal(); }, { passive: false });
+    // Support instant pointer interaction for Safari/mobile
+    closeFolderModalBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); closeFolderModal(); });
+    cancelFolderModalBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); closeFolderModal(); });
+
+    // Click outside to close
+    folderModal.addEventListener('pointerdown', (e) => {
+        if (e.target === folderModal) closeFolderModal();
+    });
 
     folderForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1616,9 +1632,14 @@ function setupEventListeners() {
     closeModalBtn.addEventListener('click', closeAddModal);
     cancelBtn.addEventListener('click', closeAddModal);
 
-    // Support instant touch for Safari/mobile
-    closeModalBtn.addEventListener('touchstart', (e) => { e.preventDefault(); closeAddModal(); }, { passive: false });
-    cancelBtn.addEventListener('touchstart', (e) => { e.preventDefault(); closeAddModal(); }, { passive: false });
+    // Support instant pointer interaction for Safari/mobile
+    closeModalBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); closeAddModal(); });
+    cancelBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); closeAddModal(); });
+
+    // Click outside to close
+    recipeModal.addEventListener('pointerdown', (e) => {
+        if (e.target === recipeModal) closeAddModal();
+    });
 
     // View Modal
     const closeViewModal = () => {
@@ -1626,7 +1647,12 @@ function setupEventListeners() {
         currentViewRecipeId = null;
     };
     closeViewModalBtn.addEventListener('click', closeViewModal);
-    closeViewModalBtn.addEventListener('touchstart', (e) => { e.preventDefault(); closeViewModal(); }, { passive: false });
+    closeViewModalBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); closeViewModal(); });
+
+    // Click outside to close (excluding dynamic thumbnails/links)
+    viewModal.addEventListener('pointerdown', (e) => {
+        if (e.target === viewModal) closeViewModal();
+    });
 
     // Edit Recipe (Delegated)
     viewModal.addEventListener('click', (e) => {
