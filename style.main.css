@@ -488,7 +488,7 @@ button {
 .folder-item.dragging-touch {
     opacity: 0.8;
     z-index: 1000;
-    position: fixed;
+    position: relative;
     pointer-events: none;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     background: var(--color-surface);

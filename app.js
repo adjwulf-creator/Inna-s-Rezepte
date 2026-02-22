@@ -1083,18 +1083,12 @@ function setupFolderItemListeners() {
             touchInitialY = touch.pageY;
 
             // We are already wiggling, but we need a very short delay to distinguish 
+            // We are already wiggling, but we need a very short delay to distinguish
             // from an intentional scroll toggle (though preventDefault on move handles this).
             // 100ms is enough to signal "I want to grab this item".
             touchLongPressTimer = setTimeout(() => {
                 touchDragging = true;
                 draggedFolderItem = item;
-
-                // Capture and lock dimensions to prevent shrinking when position: fixed
-                const rect = item.getBoundingClientRect();
-                item.style.width = rect.width + 'px';
-                item.style.height = rect.height + 'px';
-
-                item.classList.remove('wiggling'); // Don't wiggle while dragging
                 item.classList.add('dragging-touch');
 
                 if (navigator.vibrate) navigator.vibrate(50);
@@ -1168,11 +1162,7 @@ function setupFolderItemListeners() {
             touchDragging = false;
 
             // Restore item state
-            item.style.width = '';
-            item.style.height = '';
             item.classList.remove('dragging-touch');
-            if (isFolderWiggling) item.classList.add('wiggling');
-
             draggedFolderItem = null;
 
             // Save new order using centralized function
@@ -1185,11 +1175,7 @@ function setupFolderItemListeners() {
             touchDragging = false;
 
             // Restore item state
-            item.style.width = '';
-            item.style.height = '';
             item.classList.remove('dragging-touch');
-            if (isFolderWiggling) item.classList.add('wiggling');
-
             draggedFolderItem = null;
         }, { passive: true });
     });
