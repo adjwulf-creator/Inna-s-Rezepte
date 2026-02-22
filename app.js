@@ -1078,6 +1078,10 @@ function setupFolderItemListeners() {
             }
         }, { passive: false });
 
+        item.addEventListener('contextmenu', (e) => {
+            if (isFolderEditMode) e.preventDefault();
+        });
+
         item.addEventListener('touchend', async () => {
             clearTimeout(touchLongPressTimer);
             if (!touchDragging || draggedFolderItem !== item) return;
