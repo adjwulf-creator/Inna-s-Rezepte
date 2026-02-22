@@ -2017,6 +2017,10 @@ select:focus {
     }
 
     /* Custom select popups on mobile - display inline since they're in a scrollable container */
+    .mobile-dropdown-content {
+        padding: 0;
+    }
+
     .multi-select-dropdown:not(.hidden) {
         position: relative;
         top: auto;
@@ -2095,7 +2099,7 @@ select:focus {
         top: 0;
         background: var(--color-surface);
         z-index: 10;
-        margin: -1.5rem -1.5rem 0 -1.5rem;
+        margin: 0;
         padding: 1rem 1.5rem 0 1.5rem;
         border-bottom: 1px solid var(--color-border);
     }
