@@ -1026,20 +1026,16 @@ function setupFolderItemListeners() {
             const touch = e.touches[0];
             touchInitialY = touch.pageY;
 
-            // Start a long-press timer (shortened for snapier feel)
+            // We are already wiggling, but we need a very short delay to distinguish 
+            // from an intentional scroll toggle (though preventDefault on move handles this).
+            // 100ms is enough to signal "I want to grab this item".
             touchLongPressTimer = setTimeout(() => {
-                isFolderWiggling = true;
-                // Make all folders wiggle
-                const allFolders = folderList.querySelectorAll('.folder-item');
-                allFolders.forEach(f => f.classList.add('wiggling'));
-
                 touchDragging = true;
                 draggedFolderItem = item;
                 item.classList.add('dragging');
 
-                // Haptic feedback
                 if (navigator.vibrate) navigator.vibrate(50);
-            }, 400);
+            }, 100);
         }, { passive: true });
 
         item.addEventListener('touchmove', (e) => {
