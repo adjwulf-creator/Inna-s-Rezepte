@@ -1928,23 +1928,17 @@ function setupEventListeners() {
 function openViewModal(recipe) {
     currentViewRecipeId = recipe.id;
 
-    // Persistence: Load checked state
-    const storageKey = `recipeChecked_${recipe.id}`;
-    let savedCheckedIndices = [];
-    try {
-        const saved = localStorage.getItem(storageKey);
-        if (saved) savedCheckedIndices = JSON.parse(saved);
-    } catch (e) {
-        console.warn("Could not load checked ingredients", e);
-    }
+    // Persistence: Load checked state from DB (checked_ingredients is an array of indices)
+    let savedCheckedIndices = Array.isArray(recipe.checked_ingredients) ? recipe.checked_ingredients : [];
 
     // Set up images for gallery and lightbox
     currentLightboxImages = recipe.images && recipe.images.length > 0
         ? recipe.images
         : (recipe.imageData ? [recipe.imageData] : []);
 
-    // ... (rest of image logic remains same)
+    // The main image is either the first in the array or the explicit standard image
     let initialMainImageUrl = recipe.imageData || (currentLightboxImages.length > 0 ? currentLightboxImages[0] : null);
+    // Find index of the main image for the lightbox
     currentLightboxIndex = currentLightboxImages.indexOf(initialMainImageUrl) >= 0
         ? currentLightboxImages.indexOf(initialMainImageUrl)
         : 0;
@@ -2022,14 +2016,32 @@ function openViewModal(recipe) {
         </div>
     `;
 
-    // Persistence: Add listeners to save state
+    // Persistence: Add listeners to save state to DB
+    let saveTimeout = null;
     const checkboxes = viewRecipeDetails.querySelectorAll('.ingredient-checkbox');
     checkboxes.forEach(cb => {
         cb.addEventListener('change', () => {
             const currentChecked = Array.from(checkboxes)
                 .filter(box => box.checked)
                 .map(box => parseInt(box.dataset.index));
-            localStorage.setItem(storageKey, JSON.stringify(currentChecked));
+
+            // 1. Update local memory immediately
+            recipe.checked_ingredients = currentChecked;
+
+            // 2. Debounced save to DB
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(async () => {
+                try {
+                    const { error } = await sbClient
+                        .from('recipes')
+                        .update({ checked_ingredients: currentChecked })
+                        .eq('id', recipe.id);
+                    if (error) throw error;
+                    console.log("Ingredient status synced to DB");
+                } catch (err) {
+                    console.error("Error syncing ingredients to DB:", err);
+                }
+            }, 500);
         });
     });
 
