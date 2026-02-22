@@ -108,8 +108,8 @@ h4 {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     z-index: 95;
-    max-height: calc(100vh - 110px);
-    max-height: calc(100dvh - 110px);
+    bottom: 0;
+    max-height: none;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overflow-x: hidden;
@@ -121,7 +121,10 @@ h4 {
 
 #mobileDropdownFolders {
     height: calc(100vh - 110px);
-    height: calc(100dvh - 110px);
+    height: calc(100svh - 110px);
+    /* Fallback to small viewport height for safety, but bottom:0 handles the bleed */
+    height: auto;
+    flex: 1;
     overflow-y: hidden;
     overscroll-behavior: none;
     touch-action: none;
@@ -2265,15 +2268,15 @@ select:focus {
 
     .mobile-dropdown-content .folder-list {
         margin-right: 0;
-        padding: 0.5rem 1.5rem 100px 1.5rem;
-        padding-bottom: calc(2rem + env(safe-area-inset-bottom) + 60px);
+        padding: 0.5rem 1.5rem calc(2rem + env(safe-area-inset-bottom) + 60px) 1.5rem;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y;
         flex-grow: 1;
         min-height: 0;
-        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25px, black 100%);
-        mask-image: linear-gradient(to bottom, transparent 0%, black 25px, black 100%);
+        /* Remove bottom mask to allow bleeding into translucency */
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25px);
+        mask-image: linear-gradient(to bottom, transparent 0%, black 25px);
     }
 
     .folder-list.folder-edit-mode .folder-item .folder-actions {
