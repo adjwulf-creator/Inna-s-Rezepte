@@ -2101,6 +2101,14 @@ select:focus {
     }
 
     .mobile-dropdown-content .sidebar-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
         margin-bottom: 0;
+        padding-bottom: 0.5rem;
+    }
+
+    .mobile-dropdown-content .sidebar-header>div:first-child {
+        align-items: center !important;
     }
 }
