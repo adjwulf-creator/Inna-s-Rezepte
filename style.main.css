@@ -57,6 +57,16 @@ body {
     min-height: 100dvh;
 }
 
+/* Background Locking when modals or dropdowns are open */
+body.modal-active,
+body.mobile-dropdown-active {
+    overflow: hidden !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    position: fixed;
+    width: 100%;
+}
+
 h1,
 h2,
 h3,
@@ -1142,14 +1152,18 @@ select:focus {
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(44, 62, 80, 0.6);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 2100;
+    /* Higher than header and dropdowns */
     opacity: 1;
     visibility: visible;
     transition: var(--transition);
