@@ -107,6 +107,8 @@ h4 {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     z-index: 95;
+    height: calc(100vh - 110px);
+    height: calc(100dvh - 110px);
     max-height: calc(100vh - 110px);
     max-height: calc(100dvh - 110px);
     overflow-y: hidden;
@@ -117,7 +119,6 @@ h4 {
     display: flex;
     flex-direction: column;
     gap: 0;
-    /* Gap handled by internal paddings/margins now */
 }
 
 .mobile-dropdown-content.hidden {
@@ -2135,11 +2136,12 @@ select:focus {
     .mobile-dropdown-content .folder-list {
         margin-right: 0;
         padding: 1.5rem;
-        /* Restore external padding for the list area */
+        padding-bottom: 100px;
+        padding-bottom: calc(2rem + env(safe-area-inset-bottom) + 60px);
         overflow-y: auto;
-        /* List is now the scrollable container */
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y;
         flex-grow: 1;
+        min-height: 0;
     }
 }
