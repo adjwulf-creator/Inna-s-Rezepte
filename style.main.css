@@ -103,6 +103,7 @@ h4 {
     right: 0;
     width: 100%;
     background: var(--color-surface);
+    border-bottom: 2px solid var(--color-border);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     z-index: 95;
@@ -688,13 +689,6 @@ button {
 
 .multi-select-header:hover {
     border-color: var(--color-primary);
-}
-
-#categoryFilterHeader {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    padding-left: 0 !important;
 }
 
 .multi-select-dropdown {
@@ -2188,7 +2182,7 @@ select:focus {
         z-index: 10;
         margin: 0;
         padding: 0 1.5rem;
-        border-bottom: none;
+        border-bottom: 1px solid var(--color-border);
     }
 
     .mobile-dropdown-content .sidebar-header {
