@@ -183,6 +183,8 @@ if (mobileFoldersBtn && mobileControlsBtn) {
     mobileFoldersBtn.addEventListener('click', () => {
         mobileDropdownFolders.classList.toggle('hidden');
         mobileDropdownControls.classList.add('hidden');
+        if (window.innerWidth <= 768 && settingsModal) settingsModal.classList.add('hidden');
+
         const foldersOpen = !mobileDropdownFolders.classList.contains('hidden');
         if (foldersOpen) positionDropdown(mobileDropdownFolders);
         document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.add('hidden'));
@@ -191,6 +193,8 @@ if (mobileFoldersBtn && mobileControlsBtn) {
     mobileControlsBtn.addEventListener('click', () => {
         mobileDropdownControls.classList.toggle('hidden');
         mobileDropdownFolders.classList.add('hidden');
+        if (window.innerWidth <= 768 && settingsModal) settingsModal.classList.add('hidden');
+
         const controlsOpen = !mobileDropdownControls.classList.contains('hidden');
         if (controlsOpen) positionDropdown(mobileDropdownControls);
         if (!controlsOpen) {
