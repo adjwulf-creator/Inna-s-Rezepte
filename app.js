@@ -258,6 +258,9 @@ document.addEventListener('click', (e) => {
     const controlsOpen = mobileDropdownControls && !mobileDropdownControls.classList.contains('hidden');
     if (!foldersOpen && !controlsOpen) return;
 
+    // Do not close dropdowns if interacting with a modal
+    if (document.body.classList.contains('modal-active')) return;
+
     // Check if click is inside the header or dropdowns
     const header = document.querySelector('.app-header');
     if (header && header.contains(e.target)) return;
@@ -1345,6 +1348,8 @@ function setupRecipeDragListeners() {
 function setupEventListeners() {
     // Close mobile dropdowns when clicking outside
     document.addEventListener('click', (e) => {
+        if (document.body.classList.contains('modal-active')) return; // Let modal handle its own state
+
         const isClickInsideFoldersBtn = mobileFoldersBtn && mobileFoldersBtn.contains(e.target);
         const isClickInsideControlsBtn = mobileControlsBtn && mobileControlsBtn.contains(e.target);
         const isClickInsideFoldersDropdown = mobileDropdownFolders && mobileDropdownFolders.contains(e.target);

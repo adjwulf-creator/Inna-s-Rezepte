@@ -1188,6 +1188,14 @@ select:focus {
     transition: var(--transition);
 }
 
+/* Specific styling for folder modal to match header color */
+#folderModal {
+    background-color: rgba(250, 247, 242, 0.7);
+    /* Lighter background matching var(--color-bg) */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
 .modal.hidden {
     opacity: 0;
     visibility: hidden;
