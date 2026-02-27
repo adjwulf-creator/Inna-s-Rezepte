@@ -72,6 +72,9 @@ body.modal-active .app-header,
 body.modal-active .app-main {
     pointer-events: none !important;
     user-select: none !important;
+    -webkit-user-select: none !important;
+    touch-action: none !important;
+    filter: blur(4px);
 }
 
 h1,

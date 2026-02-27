@@ -1578,10 +1578,10 @@ function setupEventListeners() {
     closeFolderModalBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); closeFolderModal(); });
     cancelFolderModalBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); closeFolderModal(); });
 
-    // Click outside to close
-    folderModal.addEventListener('pointerdown', (e) => {
-        if (e.target === folderModal) closeFolderModal();
-    });
+    // Click outside to close (disabled per user request to lock background completely)
+    // folderModal.addEventListener('pointerdown', (e) => {
+    //     if (e.target === folderModal) closeFolderModal();
+    // });
 
     folderForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1630,10 +1630,10 @@ function setupEventListeners() {
     closeModalBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); closeAddModal(); });
     cancelBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); closeAddModal(); });
 
-    // Click outside to close
-    recipeModal.addEventListener('pointerdown', (e) => {
-        if (e.target === recipeModal) closeAddModal();
-    });
+    // Click outside to close (disabled per user request)
+    // recipeModal.addEventListener('pointerdown', (e) => {
+    //     if (e.target === recipeModal) closeAddModal();
+    // });
 
     // View Modal
     const closeViewModal = () => {
@@ -1643,10 +1643,10 @@ function setupEventListeners() {
     closeViewModalBtn.addEventListener('click', closeViewModal);
     closeViewModalBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); closeViewModal(); });
 
-    // Click outside to close (excluding dynamic thumbnails/links)
-    viewModal.addEventListener('pointerdown', (e) => {
-        if (e.target === viewModal) closeViewModal();
-    });
+    // Click outside to close (disabled per user request)
+    // viewModal.addEventListener('pointerdown', (e) => {
+    //     if (e.target === viewModal) closeViewModal();
+    // });
 
     // Edit Recipe (Delegated)
     viewModal.addEventListener('click', (e) => {
