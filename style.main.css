@@ -127,10 +127,10 @@ h4 {
     left: 0;
     right: 0;
     width: 100%;
-    background: rgba(250, 247, 242, 0.85);
-    /* Semi-transparent var(--color-bg) */
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(250, 247, 242, 0.7);
+    /* Lighter opacity matches modal */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     z-index: 95;
@@ -2301,9 +2301,9 @@ select:focus {
     .mobile-dropdown-content .sidebar-sticky-section {
         position: sticky;
         top: 0;
-        background: rgba(250, 247, 242, 0.85);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        background: rgba(250, 247, 242, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         z-index: 10;
         margin: 0;
         padding: 0 1.5rem;
