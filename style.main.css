@@ -2269,12 +2269,16 @@ select:focus {
         height: 100dvh;
     }
 
-    body.mobile-dropdown-active .content-area,
     body.modal-active .content-area {
         filter: blur(4px);
         pointer-events: none;
         user-select: none;
         opacity: 0.5;
+    }
+
+    body.mobile-dropdown-active .content-area {
+        pointer-events: none;
+        user-select: none;
     }
 
     body.mobile-dropdown-active #addRecipeBtn {
