@@ -404,11 +404,9 @@ button {
     background: rgba(122, 107, 168, 0.08);
     /* Very subtle active background */
     color: var(--color-primary) !important;
-    border-left: 3px solid var(--color-primary);
-    /* Small accent line */
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    padding-left: calc(0.8rem - 3px);
-    /* Compensate for border to keep text aligned */
+    border-radius: var(--radius-md);
+    /* Fully rounded corners */
+    font-weight: 700;
 }
 
 .sidebar-title-btn.active i {
@@ -454,7 +452,8 @@ button {
     list-style: none;
     overflow-y: auto;
     overscroll-behavior: contain;
-    margin-top: 1.2rem;
+    margin-top: 0.2rem;
+    /* Reduced gap */
     padding-top: 0;
     margin-right: -1.5rem;
     padding-right: 1rem;
