@@ -2395,9 +2395,31 @@ select:focus {
         border-radius: 0;
         border-bottom-left-radius: var(--radius-lg);
         border-bottom-right-radius: var(--radius-lg);
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        overflow: hidden;
+        /* Prevent parent from scrolling */
         display: flex;
         flex-direction: column;
+    }
+
+    /* Keep settings header and tabs sticky, only scroll the active tab's content */
+    #settingsModal .modal-header,
+    #settingsModal .settings-tabs {
+        flex-shrink: 0;
+    }
+
+    #settingsModal .settings-tabs {
+        margin-bottom: 0;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    #settingsModal .tab-content.active {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+        padding-right: 0.5rem;
+        /* Space for scrollbar */
     }
 }
