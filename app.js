@@ -297,8 +297,8 @@ async function initApp() {
 
     syncLanguageHeaders();
 
-    applyLanguage(); // Execute initial
     setupEventListeners();
+    setupFolderItemListenersOnce(); // New function for one-time listeners
     applyViewState();
     await checkUser();
 }
@@ -846,14 +846,11 @@ function stopAutoScroll() {
     autoScrollVelocity = 0;
 }
 
-function setupFolderItemListeners() {
-    // 1. "All Recipes" Title Button Click (Direct listener since it's now in header)
+function setupFolderItemListenersOnce() {
+    // 1. "All Recipes" Title Button Click
     const allRecipesBtn = document.getElementById('allRecipesBtn');
     if (allRecipesBtn) {
-        // Clone and replace to prevent duplicate listeners
-        const newAllBtn = allRecipesBtn.cloneNode(true);
-        allRecipesBtn.parentNode.replaceChild(newAllBtn, allRecipesBtn);
-        newAllBtn.addEventListener('click', () => {
+        allRecipesBtn.addEventListener('click', () => {
             if (isFolderEditMode) return;
             currentFolderId = 'all';
             renderFolders();
@@ -873,10 +870,7 @@ function setupFolderItemListeners() {
 
     const editFoldersBtn = document.getElementById('editFoldersBtn');
     if (editFoldersBtn) {
-        // Clone and replace to prevent duplicate listeners
-        const newBtn = editFoldersBtn.cloneNode(true);
-        editFoldersBtn.parentNode.replaceChild(newBtn, editFoldersBtn);
-        newBtn.addEventListener('click', async (e) => {
+        editFoldersBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
 
             if (isFolderEditMode) {
@@ -893,6 +887,10 @@ function setupFolderItemListeners() {
             renderFolders();
         });
     }
+}
+
+function setupFolderItemListeners() {
+
 
     // Folder Clicks (includes "All Recipes" and Sidebar items)
     const items = document.querySelectorAll('.sidebar .folder-item');
