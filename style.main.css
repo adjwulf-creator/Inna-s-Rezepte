@@ -135,8 +135,10 @@ h4 {
     padding: 1.5rem;
     z-index: 95;
     bottom: auto;
-    max-height: 90vh;
-    /* Fallback for non-folder dropdowns */
+    max-height: 80vh;
+    max-height: 80dvh;
+    border-bottom-left-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-lg);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overflow-x: hidden;
@@ -147,8 +149,6 @@ h4 {
 }
 
 #mobileDropdownFolders {
-    height: auto !important;
-    bottom: 0 !important;
     flex: 1;
     overflow: hidden;
     /* Lock parent to allow inner scroll */
@@ -2348,5 +2348,17 @@ select:focus {
 
     .folder-list.folder-edit-mode .folder-item .folder-actions {
         gap: 1rem;
+    }
+
+    #mobileDropdownFolders {
+        height: auto;
+        bottom: auto;
+        /* Allow height limiting */
+        max-height: 80vh;
+        /* Adjust height limit */
+        max-height: 80dvh;
+        border-bottom-left-radius: var(--radius-lg);
+        border-bottom-right-radius: var(--radius-lg);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
     }
 }
