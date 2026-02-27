@@ -373,37 +373,42 @@ button {
 }
 
 .sidebar-title-btn {
-    background: var(--color-bg);
-    border: none;
+    background: transparent;
+    border: 1px solid transparent;
     font-size: 1.1rem;
     color: var(--color-primary);
     font-family: var(--font-heading);
     cursor: pointer;
-    padding: 0.6rem 1rem;
+    padding: 0.5rem 0.8rem;
     transition: var(--transition);
     border-radius: var(--radius-md);
     font-weight: 600;
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    margin-bottom: 0.5rem;
 }
 
 .sidebar-title-btn i {
-    font-size: 0.9rem;
-    opacity: 0.8;
+    font-size: 1rem;
+    opacity: 0.85;
 }
 
 .sidebar-title-btn:hover {
-    background: #f0edf7;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: rgba(122, 107, 168, 0.05);
+    transform: translateX(2px);
 }
 
 .sidebar-title-btn.active {
-    background: rgba(122, 107, 168, 0.12);
+    background: rgba(122, 107, 168, 0.08);
+    /* Very subtle active background */
     color: var(--color-primary) !important;
-    box-shadow: none;
+    border-left: 3px solid var(--color-primary);
+    /* Small accent line */
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding-left: calc(0.8rem - 3px);
+    /* Compensate for border to keep text aligned */
 }
 
 .sidebar-title-btn.active i {
