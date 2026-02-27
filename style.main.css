@@ -401,13 +401,13 @@ button {
 }
 
 .sidebar-title-btn.active {
-    background: var(--color-primary);
-    color: white !important;
-    box-shadow: 0 4px 12px rgba(122, 107, 168, 0.4);
+    background: rgba(122, 107, 168, 0.12);
+    color: var(--color-primary) !important;
+    box-shadow: none;
 }
 
 .sidebar-title-btn.active i {
-    color: white !important;
+    color: var(--color-primary) !important;
     opacity: 1;
 }
 
