@@ -2202,17 +2202,17 @@ select:focus {
     }
 
     .multi-select-dropdown:not(.hidden) {
-        position: relative;
-        top: auto;
-        left: auto;
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 0;
         transform: none;
         width: 100%;
         max-width: none;
         max-height: 200px;
         border-radius: var(--radius-sm);
         box-shadow: 0 4px 15px var(--color-shadow);
-        z-index: 100;
-        margin-top: 5px;
+        z-index: 1000;
+        margin-top: 0;
         padding: 0.5rem 0;
     }
 
