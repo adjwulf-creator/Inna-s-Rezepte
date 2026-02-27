@@ -255,26 +255,28 @@ document.addEventListener('touchstart', () => { isTouchScrolling = false; }, { p
 
 // Close mobile dropdowns when clicking outside the header (capture phase to intercept before other handlers)
 document.addEventListener('click', (e) => {
+    const isMobile = window.innerWidth <= 768;
     const foldersOpen = mobileDropdownFolders && !mobileDropdownFolders.classList.contains('hidden');
     const controlsOpen = mobileDropdownControls && !mobileDropdownControls.classList.contains('hidden');
-    if (!foldersOpen && !controlsOpen) return;
+    const settingsOpen = settingsModal && !settingsModal.classList.contains('hidden') && isMobile;
 
-    // Do not close dropdowns if interacting with a modal
-    if (document.body.classList.contains('modal-active')) return;
+    if (!foldersOpen && !controlsOpen && !settingsOpen) return;
+
+    // Do not close dropdowns if interacting with a modal (unless it's the settings modal on mobile)
+    if (document.body.classList.contains('modal-active') && !settingsOpen) return;
 
     // Check if click is inside the header or dropdowns
     const header = document.querySelector('.app-header');
     if (header && header.contains(e.target)) return;
     if (mobileDropdownFolders && mobileDropdownFolders.contains(e.target)) return;
     if (mobileDropdownControls && mobileDropdownControls.contains(e.target)) return;
+    if (settingsOpen && settingsModal.querySelector('.modal-content') && settingsModal.querySelector('.modal-content').contains(e.target)) return;
 
-    // Close dropdowns (icon states are synchronized by the MutationObserver)
-    if (foldersOpen) {
-        mobileDropdownFolders.classList.add('hidden');
-    }
-    if (controlsOpen) {
-        mobileDropdownControls.classList.add('hidden');
-    }
+    // Close dropdowns
+    if (foldersOpen) mobileDropdownFolders.classList.add('hidden');
+    if (controlsOpen) mobileDropdownControls.classList.add('hidden');
+    if (settingsOpen) settingsModal.classList.add('hidden');
+
     e.stopPropagation();
     e.preventDefault();
 }, true);
@@ -1441,10 +1443,21 @@ function setupEventListeners() {
 
     // Settings Modal & Tabs
     settingsBtn.addEventListener('click', () => {
+        // If on mobile, close other dropdowns first
+        if (window.innerWidth <= 768) {
+            if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
+            if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
+        }
+
         settingsModal.classList.remove('hidden');
         passwordMessage.classList.add('hidden');
         appNameMessage.classList.add('hidden');
         appNameInput.value = currentUser?.user_metadata?.app_name || '';
+
+        // Position it under the header exactly like mobile folders
+        if (window.innerWidth <= 768) {
+            positionDropdown(settingsModal.querySelector('.modal-content'));
+        }
     });
 
     // Settings - Update App Name

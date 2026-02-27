@@ -2363,4 +2363,41 @@ select:focus {
         border-bottom-right-radius: var(--radius-lg);
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
     }
+
+    /* Make Settings Modal behave like a mobile dropdown */
+    #settingsModal {
+        align-items: flex-start;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        padding: 0;
+        pointer-events: none;
+        /* Let clicks pass through the background */
+    }
+
+    #settingsModal .modal-content {
+        pointer-events: auto;
+        /* Re-enable clicks on the content */
+        position: absolute;
+        top: 110px;
+        /* Match header height roughly */
+        left: 0;
+        right: 0;
+        width: 100%;
+        margin: 0;
+        background: rgba(250, 247, 242, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        padding: 1.5rem;
+        max-height: 80vh;
+        max-height: 80dvh;
+        border-radius: 0;
+        border-bottom-left-radius: var(--radius-lg);
+        border-bottom-right-radius: var(--radius-lg);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        display: flex;
+        flex-direction: column;
+    }
 }
