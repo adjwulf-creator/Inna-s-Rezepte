@@ -173,7 +173,8 @@ if (mobileFoldersBtn && mobileControlsBtn) {
             if (dropdown.id === 'mobileDropdownControls') {
                 dropdown.style.maxHeight = 'calc(100dvh - ' + header.offsetHeight + 'px)';
             } else {
-                dropdown.style.maxHeight = 'none';
+                // Let CSS handle the max-height for folders
+                dropdown.style.maxHeight = '';
             }
         }
     }
