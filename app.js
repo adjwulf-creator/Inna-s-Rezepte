@@ -715,11 +715,7 @@ function renderFolders() {
     // Update the "All Recipes" header button state
     const allRecipesBtn = document.getElementById('allRecipesBtn');
     if (allRecipesBtn) {
-        if (currentFolderId === 'all') {
-            allRecipesBtn.classList.add('active');
-        } else {
-            allRecipesBtn.classList.remove('active');
-        }
+        allRecipesBtn.classList.add('active'); // Immer lila
     }
 
     // Reset folder list
