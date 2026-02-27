@@ -2378,7 +2378,8 @@ select:focus {
     #settingsModal .modal-content {
         pointer-events: auto;
         /* Re-enable clicks on the content */
-        position: absolute;
+        position: fixed;
+        /* Fixed instead of absolute helps Safari calculate max-height correctly */
         top: 110px;
         /* Match header height roughly */
         left: 0;
@@ -2422,8 +2423,10 @@ select:focus {
     }
 
     #settingsModal .tab-content.active {
-        flex: 1;
+        flex: 1 1 0px;
         min-height: 0;
+        height: 100%;
+        /* Safari fallback */
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         padding-top: 1rem;
