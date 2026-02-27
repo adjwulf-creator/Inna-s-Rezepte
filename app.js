@@ -234,6 +234,17 @@ if (mobileFoldersBtn && mobileControlsBtn) {
             }
         }
 
+        // Add settings button icon sync
+        if (settingsBtn) {
+            const icon = settingsBtn.querySelector('i');
+            if (settingsOpen && isMobile) {
+                if (icon) icon.className = 'fa-solid fa-xmark';
+                settingsBtn.classList.add('active-dropdown-btn');
+            } else {
+                if (icon) icon.className = 'fa-solid fa-gear';
+                settingsBtn.classList.remove('active-dropdown-btn');
+            }
+        }
 
         const openModals = Array.from(document.querySelectorAll('.modal:not(.hidden)'));
         const shouldBeModalActive = openModals.some(modal => {
@@ -1452,8 +1463,16 @@ function setupEventListeners() {
 
     // Settings Modal & Tabs
     settingsBtn.addEventListener('click', () => {
-        // If on mobile, close other dropdowns first
-        if (window.innerWidth <= 768) {
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+            // Mobile: Toggle behavior like other dropdowns
+            if (!settingsModal.classList.contains('hidden')) {
+                settingsModal.classList.add('hidden');
+                return;
+            }
+
+            // Close other dropdowns first
             if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
             if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
         }
@@ -1464,7 +1483,7 @@ function setupEventListeners() {
         appNameInput.value = currentUser?.user_metadata?.app_name || '';
 
         // Position it under the header exactly like mobile folders
-        if (window.innerWidth <= 768) {
+        if (isMobile) {
             positionDropdown(settingsModal.querySelector('.modal-content'));
         }
     });
