@@ -158,6 +158,7 @@ h4 {
 
 #mobileDropdownControls {
     padding: 2.2rem;
+    overflow: visible;
 }
 
 .mobile-dropdown-content.hidden {
