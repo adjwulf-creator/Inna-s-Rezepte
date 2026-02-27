@@ -57,14 +57,13 @@ body {
     min-height: 100dvh;
 }
 
-/* Background Locking when modals or dropdowns are open */
+/* Background Locking without breaking Safari's transparent bottom bar */
 body.modal-active,
 body.mobile-dropdown-active {
-    overflow: hidden !important;
-    height: 100vh !important;
-    height: 100dvh !important;
-    position: fixed;
-    width: 100%;
+    overflow: hidden;
+    /* Desktop lock */
+    overscroll-behavior: none;
+    /* iOS scroll chaining prevention */
 }
 
 /* Interaction Lock: Prevent background clicks when modal is open */
@@ -1186,6 +1185,8 @@ select:focus {
     opacity: 1;
     visibility: visible;
     transition: var(--transition);
+    overscroll-behavior: contain;
+    touch-action: none;
 }
 
 /* Specific styling for folder modal to match header color */
@@ -1213,6 +1214,8 @@ select:focus {
     border: 2px solid var(--color-border);
     transform: scale(1);
     transition: transform 0.3s ease;
+    touch-action: pan-y;
+    /* Re-enable scrolling inside the modal content */
 }
 
 .modal.hidden .modal-content {
