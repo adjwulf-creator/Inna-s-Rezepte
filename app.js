@@ -164,20 +164,22 @@ function adaptMobileLayout() {
 }
 
 window.addEventListener('resize', adaptMobileLayout);
-if (mobileFoldersBtn && mobileControlsBtn) {
-    function positionDropdown(dropdown) {
-        const header = document.querySelector('.app-header');
-        if (header) {
-            dropdown.style.top = header.offsetHeight + 'px';
-            // Only cap height for controls, allow folders to bleed to the bottom (bottom:0 in CSS)
-            if (dropdown.id === 'mobileDropdownControls') {
-                dropdown.style.maxHeight = 'calc(100dvh - ' + header.offsetHeight + 'px)';
-            } else {
-                // Let CSS handle the max-height for folders
-                dropdown.style.maxHeight = '';
-            }
+
+function positionDropdown(dropdown) {
+    const header = document.querySelector('.app-header');
+    if (header) {
+        dropdown.style.top = header.offsetHeight + 'px';
+        // Only cap height for controls, allow folders to bleed to the bottom (bottom:0 in CSS)
+        if (dropdown.id === 'mobileDropdownControls') {
+            dropdown.style.maxHeight = 'calc(100dvh - ' + header.offsetHeight + 'px)';
+        } else {
+            // Let CSS handle the max-height for folders
+            dropdown.style.maxHeight = '';
         }
     }
+}
+
+if (mobileFoldersBtn && mobileControlsBtn) {
     mobileFoldersBtn.addEventListener('click', () => {
         mobileDropdownFolders.classList.toggle('hidden');
         mobileDropdownControls.classList.add('hidden');
@@ -200,8 +202,10 @@ if (mobileFoldersBtn && mobileControlsBtn) {
     const overlayObserver = new MutationObserver(() => {
         const foldersOpen = mobileDropdownFolders && !mobileDropdownFolders.classList.contains('hidden');
         const controlsOpen = mobileDropdownControls && !mobileDropdownControls.classList.contains('hidden');
+        const settingsOpen = settingsModal && !settingsModal.classList.contains('hidden');
+        const isMobile = window.innerWidth <= 768;
 
-        if (foldersOpen || controlsOpen) {
+        if (foldersOpen || controlsOpen || (settingsOpen && isMobile)) {
             document.body.classList.add('mobile-dropdown-active');
         } else {
             document.body.classList.remove('mobile-dropdown-active');
@@ -231,8 +235,13 @@ if (mobileFoldersBtn && mobileControlsBtn) {
         }
 
 
-        const openModal = document.querySelector('.modal:not(.hidden)');
-        if (openModal) {
+        const openModals = Array.from(document.querySelectorAll('.modal:not(.hidden)'));
+        const shouldBeModalActive = openModals.some(modal => {
+            if (isMobile && modal.id === 'settingsModal') return false;
+            return true;
+        });
+
+        if (shouldBeModalActive) {
             document.body.classList.add('modal-active');
         } else {
             document.body.classList.remove('modal-active');
