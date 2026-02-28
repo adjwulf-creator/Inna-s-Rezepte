@@ -2388,7 +2388,8 @@ select:focus {
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-        padding: 1rem;
+        padding: 0 1rem 1rem 1rem;
+        /* Removed top padding to pull content closer to header */
         max-height: 80dvh;
         /* Matches Meine Ordner height constraint */
         border-radius: 0;
