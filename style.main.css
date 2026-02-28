@@ -2371,7 +2371,9 @@ select:focus {
         -webkit-backdrop-filter: none;
         padding: 0;
         pointer-events: none;
-        /* Let clicks pass through the background */
+        /* Disable parent transition on mobile to prevent severe Safari GPU lag 
+           since we are now animating the inner .modal-content exactly like the other dropdowns */
+        transition: none !important;
     }
 
     #settingsModal .modal-content {
