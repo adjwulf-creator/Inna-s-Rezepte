@@ -2210,6 +2210,11 @@ select:focus {
         padding: 0;
     }
 
+    /* Enforce identical 1.5rem top gap for "Filter & Ansicht" on mobile */
+    #mobileDropdownControls {
+        padding: 1.5rem;
+    }
+
     .multi-select-dropdown:not(.hidden) {
         position: absolute;
         top: calc(100% + 5px);
@@ -2388,8 +2393,8 @@ select:focus {
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-        padding: 0 1rem 1rem 1rem;
-        /* Removed top padding to pull content closer to header */
+        padding: 1.5rem 1rem 1rem 1rem;
+        /* Restored standardized uniform "Balken" top padding */
         max-height: 80dvh;
         /* Matches Meine Ordner height constraint */
         border-radius: 0;
@@ -2420,7 +2425,7 @@ select:focus {
     }
 
     #settingsModal .settings-tabs {
-        margin-top: -0.6rem;
+        margin-top: 0;
         margin-bottom: 1rem;
         border-bottom: 1px solid var(--color-border);
     }
