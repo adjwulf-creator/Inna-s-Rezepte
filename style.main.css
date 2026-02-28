@@ -2420,7 +2420,7 @@ select:focus {
     }
 
     #settingsModal .settings-tabs {
-        margin-top: 0;
+        margin-top: -0.6rem;
         margin-bottom: 1rem;
         border-bottom: 1px solid var(--color-border);
     }
