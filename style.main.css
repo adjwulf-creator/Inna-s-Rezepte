@@ -2272,17 +2272,11 @@ select:focus {
         /* Removed height: 100dvh; because it clips the document under Safari's bottom bar, breaking its blur */
     }
 
+    body.mobile-dropdown-active .content-area,
     body.modal-active .content-area {
         filter: blur(4px);
-        pointer-events: none;
-        user-select: none;
-        opacity: 0.5;
-    }
-
-    /* Light blur for the background when dropdown is open */
-    body.mobile-dropdown-active .content-area {
-        filter: blur(4px);
         opacity: 0.7;
+        /* Unified opacity to prevent Safari bottom bar rendering discrepancies */
         pointer-events: none;
         user-select: none;
     }
@@ -2371,6 +2365,13 @@ select:focus {
 
     /* Make Settings Modal behave like a mobile dropdown */
     #settingsModal {
+        display: block;
+        width: 0;
+        height: 0;
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
         align-items: flex-start;
         background: transparent;
         backdrop-filter: none;
