@@ -2252,7 +2252,6 @@ select:focus {
         padding-bottom: calc(2rem + env(safe-area-inset-bottom));
     }
 
-    /* Mobile Dropdown & Modal Active Overlay */
     body.mobile-dropdown-active,
     body.modal-active {
         overflow: hidden;
@@ -2266,7 +2265,10 @@ select:focus {
         opacity: 0.5;
     }
 
+    /* Light blur for the background when dropdown is open */
     body.mobile-dropdown-active .content-area {
+        filter: blur(4px);
+        opacity: 0.7;
         pointer-events: none;
         user-select: none;
     }
