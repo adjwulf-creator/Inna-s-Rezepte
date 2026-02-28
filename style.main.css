@@ -2368,9 +2368,9 @@ select:focus {
         pointer-events: auto;
         position: fixed;
         top: 110px;
-        left: 10%;
-        /* Centering 80% width */
-        width: 80%;
+        left: 0;
+        right: 0;
+        width: 100%;
         margin: 0;
         background: rgba(250, 247, 242, 0.7);
         backdrop-filter: blur(12px);
@@ -2379,8 +2379,9 @@ select:focus {
         padding: 1rem;
         max-height: 80dvh;
         /* Matches Meine Ordner height constraint */
-        border-radius: var(--radius-lg);
-        /* Rounded on all sides for the card look */
+        border-radius: 0;
+        border-bottom-left-radius: var(--radius-lg);
+        border-bottom-right-radius: var(--radius-lg);
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
