@@ -2396,8 +2396,9 @@ select:focus {
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-        padding: 0.75rem 1rem 1rem 1rem;
-        /* Adjusted top padding to match exactly with the 0.75rem gap in "Meine Ordner" */
+        padding: 0.15rem 1rem 1rem 1rem;
+        /* Adjusted top padding to precisely 0.15rem. 
+           (0.15rem + 0.6rem tab-btn padding = 0.75rem visually matched to "Meine Ordner") */
         max-height: 80dvh;
         /* Matches Meine Ordner height constraint */
         border-radius: 0;
