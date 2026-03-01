@@ -1,12 +1,12 @@
-const CACHE_NAME = 'recipe-book-v1';
+const CACHE_NAME = 'recipe-book-v2';
 const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/style.main.css',
-    '/app.js',
-    '/translations.js',
-    '/app_icon_192.png',
-    '/app_icon_512.png',
+    './',
+    './index.html',
+    './style.main.css',
+    './app.js',
+    './translations.js',
+    './app_icon_192.png',
+    './app_icon_512.png',
     'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
 ];
