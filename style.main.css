@@ -2402,6 +2402,7 @@ select:focus {
         max-height: 80dvh;
         /* Matches Meine Ordner height constraint */
         border-radius: 0;
+        border: none;
         border-bottom-left-radius: var(--radius-lg);
         border-bottom-right-radius: var(--radius-lg);
         overflow-y: auto;
